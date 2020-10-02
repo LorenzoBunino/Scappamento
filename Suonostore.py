@@ -1,5 +1,4 @@
 import configparser
-from fp.fp import FreeProxy
 from requests import Session
 
 
@@ -17,30 +16,26 @@ def __main__():
 
         csv_filename = config['ReadyPro']['csv_filename']
         final_path = config['ReadyPro']['final_path']
-        header_snippet = config['ReadyPro']['header_snippet']
 
-    retried = -1
-    csv_confirmed = False
-    while not csv_confirmed:
-        retried += 1
-        proxy = FreeProxy().get()
-        if proxy is None:
-            print('Could not retrieve proxy')
-            continue
+    with Session() as s:
+        print('Downloading with auth...')
+        # SITE USES HTTP Basic Auth
+        r = s.get(csv_url, auth=(user, password), headers={'User-Agent': 'Chrome'})
+        with open(final_path + csv_filename, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=128):
+                f.write(chunk)
 
-        with Session() as s:
-            print('Downloading with auth...')
-            # SITE USES HTTP Basic Auth
-            proxies = {'https' if 'https' in proxy else 'http': proxy}
-            r = s.get(csv_url, auth=(user, password), proxies=proxies, headers={'User-Agent': 'Chrome'})
-            if header_snippet in r.text:
-                with open(final_path + csv_filename, 'wb') as f:
-                    for chunk in r.iter_content(chunk_size=128):
-                        f.write(chunk)
-                csv_confirmed = True
-            else:
-                print('Could not validate CSV header')
-    print('Retried ', retried, ' times')  # TODO: X times cheems
+    # CLEAN NUMBERS AND SEPARATORS UP
+    with open(final_path + csv_filename, 'r', encoding="Latin-1") as f:
+        new_csv = ""
+        for line in f:
+            temp = line.replace('.000', '')
+            temp = temp.replace('.00', '')
+            temp = temp.replace('000', '')
+            temp = temp.replace(',', ';')
+            new_csv = new_csv + temp
+    with open(final_path + csv_filename, 'w', encoding="Latin-1") as f:
+        f.write(new_csv)
 
 
 if __name__ == '__main__':
