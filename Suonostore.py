@@ -25,16 +25,18 @@ def __main__():
             for chunk in r.iter_content(chunk_size=128):
                 f.write(chunk)
 
-    # CLEAN NUMBERS AND SEPARATORS UP
+    # CLEANUP: NUMBERS,SEPARATORS, DATES
     with open(final_path + csv_filename, 'r', encoding="Latin-1") as f:
         new_csv = ""
         for line in f:
-            temp = line.replace('00:00:00', '')
-            temp = temp.replace('.000', '')
-            temp = temp.replace('.00', '')
-            temp = temp.replace('000', '')
-            temp = temp.replace(',', ';')
-            new_csv = new_csv + temp
+            temp_line = line.replace('00:00:00', '')
+            temp_line = temp_line.replace('.000', '')
+            temp_line = temp_line.replace('.00', '')
+            temp_line = temp_line.replace('000', '')
+            temp_line = temp_line.replace('/  /', '')
+            temp_line = temp_line.replace(',', ';')
+
+            new_csv = new_csv + temp_line
     with open(final_path + csv_filename, 'w', encoding="Latin-1") as f:
         f.write(new_csv)
 
