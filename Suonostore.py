@@ -29,7 +29,8 @@ def __main__():
     with open(final_path + csv_filename, 'r', encoding="Latin-1") as f:
         new_csv = ""
         for line in f:
-            temp = line.replace('.000', '')
+            temp = line.replace('00:00:00', '')
+            temp = temp.replace('.000', '')
             temp = temp.replace('.00', '')
             temp = temp.replace('000', '')
             temp = temp.replace(',', ';')
