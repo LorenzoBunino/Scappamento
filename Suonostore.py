@@ -7,7 +7,7 @@ def __main__():
 
     # CREDENTIALS & URLs
     config = configparser.ConfigParser()
-    with open('Suonostore.ini') as f:
+    with open('C:\\Ready\\ReadyPro\\Archivi\\Suonostore.ini') as f:
         config.read_file(f)
 
         user = config['suonostore.com']['user']
