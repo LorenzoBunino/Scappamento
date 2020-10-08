@@ -1,5 +1,8 @@
-# Downloads the XLS product list from the site
-# Cleans XLS table and outputs a clean CSV
+# --- Yamaha ---
+# Read config file
+# Log into B2B website
+# Download Excel product list
+# Clean Excel table and convert to CSV
 
 import os
 import sys
@@ -11,7 +14,7 @@ import pandas as pd
 def __main__():
     print('-- Yamaha --')
 
-    # CREDENTIALS & URLs
+    # Credentials and URLs
     config = configparser.ConfigParser()
     with open('Yamaha.ini') as f:
         config.read_file(f)
@@ -29,29 +32,31 @@ def __main__():
         expected_columns_len = config['ReadyPro']['expected_columns_len']
 
     with session() as s:
-        # LOGIN
+        # Login
         print("Logging in...")
         s.get(login_url)  # set preliminary cookies
         payload = {'email': email, 'password': password, 'submitform': 'Invia'}
         s.post(form_action_url, data=payload)
 
-        # DOWNLOAD
+        # Download
         print("Downloading...")
         r = s.get(xls_url)
         with open(final_path + excel_filename, 'wb') as f:
             for chunk in r.iter_content(chunk_size=128):
                 f.write(chunk)
 
-        # LOGOUT
+        # Logout
         s.get(logout_url)
 
-    # lines 425-427 in compdoc.py (xlrd) have been commented out for this to work
+    # Lines 425-427 in compdoc.py (xlrd) have been commented out for this to work
     list_xls = pd.read_excel(final_path + excel_filename, header=None)
 
-    if len(list_xls.columns) != expected_columns_len:  # check for usual file format
+    # Check file format
+    if len(list_xls.columns) != expected_columns_len:  # check for usual header size
         print("Unexpected datasheet header size")
         sys.exit()
 
+    # Edit, Convert & Save, Delete original file
     list_xls.drop([0, 1, 2, 3, 4, 5], inplace=True)
     list_xls.to_csv(final_path + csv_filename, sep=';', header=None, index=False, encoding='utf-8')
     os.remove(final_path + excel_filename)
