@@ -1,21 +1,36 @@
+# --- MusicPool ---
+# Read config file
+# Log into B2B website
+
 import configparser
 from requests import session
+from bs4 import BeautifulSoup
 
 
 def __main__():
-    # CREDENTIALS & URLs
+    print('-- MusicPool --')
+
+    # Credentials and URLs
     with open('MusicPool.ini') as f:
         config = configparser.ConfigParser()
         config.read_file(f)
 
-        user = config['musicpool.it']['user']
+        email = config['musicpool.it']['email']
         password = config['musicpool.it']['password']
-
-    if user:  # placeholder
-        pass
+        login_url = config['musicpool.it']['login_url']
+        form_action_url = config['musicpool.it']['form_action_url']
 
     with session() as s:
-        s.get('musicpool.it')  # placeholder
+        # Login
+        s.get(login_url)  # set preliminary cookies
+        payload = {'email': email, 'passwd': password, 'SubmitLogin': ''}
+        s.post(form_action_url, data=payload, headers={'User-Agent': 'Chrome'})
+        r = s.get(login_url)
+
+        # Parsing
+        # print(r.text)
+        # soup = BeautifulSoup(r.text, 'html.parser')
+
         # TODO: get excel link from DOM
         #  example: <a href="http://www.mediafire.com/file/vy6rtdib4v32tc4/maga_arca.xlsx/fileC" title="DOWNLOAD"
         #  rel="nofollow" class="style_button_wrap"><span class="btn style_button style_button_0 btn-danger
