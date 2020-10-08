@@ -1,3 +1,10 @@
+# --- Fender ---
+# Read config file
+# Log into website
+# Download pre-made inventory Excel file
+# Download custom-selected "specs" Excel file
+# Convert both files to CSV
+
 import os
 import configparser
 from requests import session
@@ -41,7 +48,7 @@ class FileCreationHandler(FileSystemEventHandler):
 def __main__():
     print('-- Fender --')
 
-    # CREDENTIALS & URLs
+    # Credentials and URLs
     config = configparser.ConfigParser()
     with open('Fender.ini') as f:
         config.read_file(f)
@@ -63,7 +70,7 @@ def __main__():
              'download.directory_upgrade': True}
     options.add_experimental_option('prefs', prefs)
     with webdriver.Chrome(options=options) as driver:
-        # LOGIN
+        # Login
         print('Logging in...')
 
         driver.get(login_url)
@@ -81,7 +88,7 @@ def __main__():
             .until(ec.element_to_be_clickable((By.ID, 'inventoryDownloadButton')))
         excel_inventory_url = excel_inventory_button.get_attribute('href')
 
-        # SWITCH TO REQUESTS / DOWNLOAD INVENTORY
+        # Switch from Selenium to Requests, download inventory Excel file
         with session() as s:
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) "
                                      "Chrome/44.0.2403.157 Safari/537.36 "
@@ -97,7 +104,7 @@ def __main__():
                 for chunk in r.iter_content(chunk_size=128):
                     fd.write(chunk)
 
-            # BACK TO SELENIUM / DOWNLOAD FANCY DATA
+            # Back to Selenium, download specs Excel file
             print('Downloading specs...')
             driver.get(product_filtered_list_url)
             excel_dropdown_button = WebDriverWait(driver, timeout=4000) \
@@ -106,7 +113,7 @@ def __main__():
             excel_specs_button = driver.find_element(By.ID, 'exportSpecsButton')
             excel_specs_button.click()
 
-            # POLL DIR
+            # Poll directory where downloaded file will appear
             observer = Observer()
             event_handler = FileCreationHandler(xlsx_specs_filename_partial, observer)
             observer.schedule(event_handler, final_path, recursive=False)
@@ -114,14 +121,17 @@ def __main__():
             observer.join()
             excel_specs_filename = event_handler.found_file  # absolute path, not just dir name
 
-            # LOGOUT
+            # Logout
             logout_dropdown_button = driver.find_element(By.CLASS_NAME, 'dropdown-toggle')
             logout_dropdown_button.click()
             logout_button = driver.find_element(By.CSS_SELECTOR, '.dropdown-menu>li>a>i.fa-sign-out')
             logout_button.click()
 
-    # FILE CONVERSION
+    # Convert and save, delete original files
     inventory_list_xlsx = pd.read_excel(final_path + xlsx_inventory_filename, header=None)
+    # TODO: add chromedriver to PATH (might be necessary on server as well)
+    #  check header size and column names
+    #  print(inventory_list_xlsx.columns)
     inventory_list_xlsx.to_csv(final_path + csv_inventory_filename, sep=';', header=None, index=False, encoding='utf-8')
     os.remove(final_path + xlsx_inventory_filename)
 
