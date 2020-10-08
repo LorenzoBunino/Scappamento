@@ -56,7 +56,7 @@ def __main__():
         print("Unexpected datasheet header size")
         sys.exit()
 
-    # Edit, Convert & Save, Delete original file
+    # Edit, convert & save, delete original file
     list_xls.drop([0, 1, 2, 3, 4, 5], inplace=True)
     list_xls.to_csv(final_path + csv_filename, sep=';', header=None, index=False, encoding='utf-8')
     os.remove(final_path + excel_filename)
