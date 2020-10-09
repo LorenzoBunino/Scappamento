@@ -1,6 +1,9 @@
 # --- MusicPool ---
 # Read config file
 # Log into B2B website
+# Download Excel file into dataframe
+# Clean file content
+# Convert to CSV
 
 import configparser
 from requests import session
@@ -13,7 +16,7 @@ def __main__():
     print('-- MusicPool --')
 
     # Credentials and URLs
-    with open('MusicPool.ini') as f:
+    with open('C:\\Ready\\ReadyPro\\Archivi\\MusicPool.ini') as f:
         config = configparser.ConfigParser()
         config.read_file(f)
 
@@ -21,6 +24,9 @@ def __main__():
         password = config['musicpool.it']['password']
         login_url = config['musicpool.it']['login_url']
         form_action_url = config['musicpool.it']['form_action_url']
+
+        csv_filename = config['ReadyPro']['csv_filename']
+        final_path = config['ReadyPro']['final_path']
 
     with session() as s:
         # Login
@@ -35,17 +41,10 @@ def __main__():
         external_host_soup = BeautifulSoup(s.get(intermediate_url).text, 'html.parser')
         # mark regular expression as a raw string to prevent <invalid unicode escape sequence> errors
         xlsx_url = external_host_soup.find(text=re.compile(r'Download[\s]*\([\d]+[.]?[\d]*[A-Z][A-Z]\)')).parent['href']
-        # r = s.get(xlsx_url)
-        #
-        # # Manipulate and save
-        # print(r.encoding)
-        # chunks = []
-        # for chunk in r.iter_content(chunk_size=128):
-        #     chunks.append(chunk)
-        # encoding = r.encoding
-        # xlsx_file = b''.join(chunks).decode(encoding if encoding is not None else 'Latin-1')
-        # pd.read_excel(xlsx_file, header=None).to_csv('C:\\Ready\\ReadyPro\\Archivi\\testPool.csv', sep=';', index=False)
-        pd.read_excel(xlsx_url, header=None).to_csv('C:\\Ready\\ReadyPro\\Archivi\\testPool.csv', sep=';', index=False)
+
+        xlsx_list = pd.read_excel(xlsx_url, header=None)
+        xlsx_list.drop([1], inplace=True)
+        xlsx_list.to_csv(final_path + csv_filename, sep=';', index=False, header=None)
 
 
 if __name__ == '__main__':
