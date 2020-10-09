@@ -2,6 +2,7 @@
 # Read config file
 # Log into B2B website
 # Download Excel file into dataframe
+# Check column count
 # Clean file content
 # Convert to CSV
 
@@ -10,6 +11,7 @@ from requests import session
 from bs4 import BeautifulSoup
 import re
 import pandas as pd
+import sys
 
 
 def __main__():
@@ -27,6 +29,7 @@ def __main__():
 
         csv_filename = config['ReadyPro']['csv_filename']
         final_path = config['ReadyPro']['final_path']
+        expected_columns_len = config['ReadyPro']['expected_columns_len']
 
     with session() as s:
         # Login
@@ -43,6 +46,12 @@ def __main__():
         xlsx_url = external_host_soup.find(text=re.compile(r'Download[\s]*\([\d]+[.]?[\d]*[A-Z][A-Z]\)')).parent['href']
 
         xlsx_list = pd.read_excel(xlsx_url, header=None)
+
+        # Check file format
+        if len(xlsx_list.columns) != expected_columns_len:  # check for usual header size
+            print("Unexpected datasheet header size")
+            sys.exit()
+
         xlsx_list.drop([1], inplace=True)
         xlsx_list.to_csv(final_path + csv_filename, sep=';', index=False, header=None)
 
