@@ -4,7 +4,9 @@ import pandas
 
 
 def __main__():
-    # CREDENTIALS AND URLs
+    print('-- Frenexport --\n')
+
+    # Credentials and URLs
     config = configparser.ConfigParser()
     with open('C:\\Ready\\ReadyPro\\Archivi\\Frenexport.ini') as f:
         config.read_file(f)
@@ -21,12 +23,12 @@ def __main__():
     with open(final_path + sql_filename) as f:
         query = f.read()
 
-    # DATABASE CONNECTION & QUERY
+    # Database connection and query
     conn = msq.connect(host=host, database=database, user=user, password=password)
     results = pandas.read_sql_query(query, conn)
     conn.close()
 
-    # RESULT SEPARATOR CLEANUP
+    # Result separator cleanup
     results_doctored = results.replace(';', ',', regex=True)
     results_doctored.to_csv(final_path + csv_filename, sep=';', index=False)
 
