@@ -8,7 +8,8 @@
 import os
 import configparser
 from requests import session
-from selenium import webdriver  # needs chromedriver.exe
+import chromedriver_binary  # Add ChromeDriver binary to path
+from selenium import webdriver  # needs ChromeDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -46,7 +47,7 @@ class FileCreationHandler(FileSystemEventHandler):
 
 
 def __main__():
-    print('-- Fender --')
+    print('-- Fender --\n')
 
     # Credentials and URLs
     config = configparser.ConfigParser()
@@ -64,15 +65,16 @@ def __main__():
         csv_specs_filename = config['ReadyPro']['csv_specs_filename']
         final_path = config['ReadyPro']['final_path']
 
+    chromedriver_path = chromedriver_binary.chromedriver_filename
     options = webdriver.ChromeOptions()
     prefs = {'download.default_directory': final_path,
              'download.prompt_for_download': False,
              'download.directory_upgrade': True}
     options.add_experimental_option('prefs', prefs)
+    options.add_argument('--headless')
     with webdriver.Chrome(options=options) as driver:
         # Login
-        print('Logging in...')
-
+        print('ChromeDriver path:', chromedriver_path, '\n\nLogging in...')
         driver.get(login_url)
 
         email_input = driver.find_element(By.ID, 'emailInput')
