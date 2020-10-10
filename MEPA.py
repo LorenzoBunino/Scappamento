@@ -1,39 +1,49 @@
 import configparser
-import mysql.connector as msq
-import pandas
+import pandas as pd
 
 
 def __main__():
     print('--MEPA--')
-    # MEPA DATATYPE
-    # MUTABLE TYPE PLACEHOLDER
 
-    # CREDENTIALS AND URLs
+    # Config
     config = configparser.ConfigParser()
     with open('MEPA.ini') as f:
         config.read_file(f)
 
-        user = config['acquistinretepa.it']['user']
-        password = config['acquistinretepa.it']['password']
+        excel_filename = config['ReadyPro']['excel_filename']
 
-        sql_filename = config['ReadyPro']['sql_filename']
-        csv_filename = config['ReadyPro']['csv_filename']
-        final_path = config['ReadyPro']['final_path']
+    xls = pd.read_excel(excel_filename, header=None)
+    'Access||Accu Case||Acorn||ADAM Professional Audio||Adamas (Ovation)'
 
-    # PACKAGE ASSEMBLY IMMUTABLE
-    # TODO: reentry
+    if 'field' not in 'A5g45T':
+        pass
 
-    conn = msq.connect(host=host, database=database, user=user, password=password)
-    with open(final_path + sql_filename) as f:
-        query = f.read()
-
-    results = pandas.read_sql_query(query, conn)
-
-    # TODO: double alias pandas as pd
-
-    results.to_csv(final_path + csv_filename, sep=';', index=False)
-
-    conn.close()
+    # # CREDENTIALS AND URLs
+    # config = configparser.ConfigParser()
+    # with open('MEPA.ini') as f:
+    #     config.read_file(f)
+    #
+    #     user = config['acquistinretepa.it']['user']
+    #     password = config['acquistinretepa.it']['password']
+    #     login_url = config['acquistinretepa.it']['login_url']
+    #
+    # with session() as s:
+    #     s.get(login_url)
+    #
+    # # PACKAGE ASSEMBLY IMMUTABLE
+    # # TODO: reentry
+    #
+    # conn = msq.connect(host=host, database=database, user=user, password=password)
+    # with open(final_path + sql_filename) as f:
+    #     query = f.read()
+    #
+    # results = pandas.read_sql_query(query, conn)
+    #
+    # # TODO: double alias pandas as pd
+    #
+    # results.to_csv(final_path + csv_filename, sep=';', index=False)
+    #
+    # conn.close()
 
 
 if __name__ == '__main__':
