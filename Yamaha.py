@@ -12,7 +12,7 @@ import pandas as pd
 
 
 def __main__():
-    print('-- Yamaha --')
+    print('-- Yamaha --\n')
 
     # Credentials and URLs
     config = configparser.ConfigParser()
