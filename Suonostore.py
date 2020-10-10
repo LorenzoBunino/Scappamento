@@ -3,9 +3,9 @@ from requests import Session
 
 
 def __main__():
-    print('-- Suonostore --')
+    print('-- Suonostore --\n')
 
-    # CREDENTIALS & URLs
+    # Credentials and URLs
     config = configparser.ConfigParser()
     with open('C:\\Ready\\ReadyPro\\Archivi\\Suonostore.ini') as csv_file:
         config.read_file(csv_file)
@@ -17,7 +17,7 @@ def __main__():
         csv_filename = config['ReadyPro']['csv_filename']
         final_path = config['ReadyPro']['final_path']
 
-    # DOWNLOAD
+    # Download
     with Session() as s:
         print('Downloading with auth...')
         # Site uses HTTP Basic Auth
@@ -28,12 +28,8 @@ def __main__():
             chunks.append(chunk)
         encoding = r.encoding
         csv_file = b''.join(chunks).decode(encoding if encoding is not None else 'utf-8')
-        # with open(final_path + csv_filename, 'wb') as csv_file:
-        #     for chunk in r.iter_content(chunk_size=128):
-        #         csv_file.write(chunk)
-    # TODO: ready to test new no-disk-write feature
 
-    # CLEANUP: NUMBERS,SEPARATORS, DATES, <INCHES> SYMBOLS
+    # Cleanup: numbers, separators, dates, <inches> symbols
     sep = ';'
     new_csv = ''
     line_count = 0
