@@ -28,9 +28,22 @@ def __main__():
     results = pandas.read_sql_query(query, conn)
     conn.close()
 
-    # Result separator cleanup
-    results_doctored = results.replace(';', ',', regex=True)
-    results_doctored.to_csv(final_path + csv_filename, sep=';', index=False)
+    # Result cleanup: separator, fields
+    results_clean = results.replace(';', ',', regex=True)  # replace instances of to-be CSV separator character
+
+    for i in range(0, len(results.index)):  # lower() is tailored to query, clean product "pretty name"
+        if results_clean.at[i, 'MARCA'].lower() in results_clean.at[i, 'DES_ART']:
+            results_clean.at[i, 'DES_ART'] = results_clean.at[i, 'DES_ART']\
+                .replace(' ' + results_clean.at[i, 'MARCA'].lower(), '')
+            # print('[ Row', i + 1, '] Found marca:', results_clean.at[i, 'DES_ART'])
+
+        if results_clean.at[i, 'MODELLO'].lower() in results_clean.at[i, 'DES_ART']:
+            results_clean.at[i, 'DES_ART'] = results_clean.at[i, 'DES_ART']\
+                .replace(' ' + results_clean.at[i, 'MODELLO'].lower(), '')
+            # print('[ Row', i + 1, '] Found modello')
+    # results_clean.loc[results_clean['MARCA'] in results_clean['DES_ART'], 'DES_ART'] =
+
+    results_clean.to_csv(final_path + csv_filename, sep=';', index=False)
 
 
 if __name__ == '__main__':
