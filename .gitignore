@@ -1,5 +1,13 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+
+# Pycharm / JetBrains files
+.idea
+
+# scappamento user config files
 *.ini
 *.sql
+
+# Lorenzo random local files
+/Utils
