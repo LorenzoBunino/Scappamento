@@ -42,6 +42,7 @@ def __main__():
                 .replace(' ' + results_clean.at[i, 'MODELLO'].lower(), '')
             # print('[ Row', i + 1, '] Found modello')
     # results_clean.loc[results_clean['MARCA'] in results_clean['DES_ART'], 'DES_ART'] =
+    # TODO: catch 't70c' when <MODELLO> is 'T-70C, check if <MARCA> has the same issue'
 
     results_clean.to_csv(final_path + csv_filename, sep=';', index=False)
 

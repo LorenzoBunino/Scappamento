@@ -13,10 +13,12 @@ def __main__():
         excel_filename = config['ReadyPro']['excel_filename']
 
     xls = pd.read_excel(excel_filename, header=None)
-    'Access||Accu Case||Acorn||ADAM Professional Audio||Adamas (Ovation)'
+    'Access||Accu Case||Acorn||ADAM Professional Audio'
 
-    if 'field' not in 'A5g45T':
+    if 'field' not in xls:
         pass
+
+    # TODO: properly generate file from Ready Pro, start chipping away at file issues
 
     # # CREDENTIALS AND URLs
     # config = configparser.ConfigParser()
@@ -31,15 +33,12 @@ def __main__():
     #     s.get(login_url)
     #
     # # PACKAGE ASSEMBLY IMMUTABLE
-    # # TODO: reentry
     #
     # conn = msq.connect(host=host, database=database, user=user, password=password)
     # with open(final_path + sql_filename) as f:
     #     query = f.read()
     #
     # results = pandas.read_sql_query(query, conn)
-    #
-    # # TODO: double alias pandas as pd
     #
     # results.to_csv(final_path + csv_filename, sep=';', index=False)
     #
