@@ -4,32 +4,42 @@
 # Download Excel product list
 # Clean Excel table and convert to CSV
 
+import scappamento._common
 import os
 import sys
-import configparser
+# import configparser
 from requests import session
 import pandas as pd
 
 
 def __main__():
-    print('-- Yamaha --\n')
+    name = 'Yamaha'
+    print('--', name, '--\n')
 
     # Credentials and URLs
-    config = configparser.ConfigParser()
-    with open('Yamaha.ini') as f:
-        config.read_file(f)
+    key_list = 'email, ' \
+               'password, ' \
+               'login_url, ' \
+               'form_action_url, ' \
+               'xls_url, ' \
+               'logout_url, ' \
+               'excel_filename, ' \
+               'csv_filename, ' \
+               'final_path, ' \
+               'expected_columns_len'
 
-        email = config['yamaha-extranet']['email']
-        password = config['yamaha-extranet']['password']
-        login_url = config['yamaha-extranet']['login_url']
-        form_action_url = config['yamaha-extranet']['form_action_url']
-        xls_url = config['yamaha-extranet']['xls_url']
-        logout_url = config['yamaha-extranet']['logout_url']
+    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\Yamaha.ini'
 
-        excel_filename = config['ReadyPro']['excel_filename']
-        csv_filename = config['ReadyPro']['csv_filename']
-        final_path = config['ReadyPro']['final_path']
-        expected_columns_len = config['ReadyPro']['expected_columns_len']
+    [email,
+     password,
+     login_url,
+     form_action_url,
+     xls_url,
+     logout_url,
+     excel_filename,
+     csv_filename,
+     final_path,
+     expected_columns_len] = scappamento._common.get_config(name, key_list, config_path)
 
     with session() as s:
         # Login
@@ -44,6 +54,7 @@ def __main__():
         with open(final_path + excel_filename, 'wb') as f:
             for chunk in r.iter_content(chunk_size=128):
                 f.write(chunk)
+        # TODO: do away with useless file write-to-disk
 
         # Logout
         s.get(logout_url)
