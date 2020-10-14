@@ -40,7 +40,7 @@ def __main__():
     for line in csv_file:
 
         if not line_count:  # skip first line = CSV header
-            new_csv = line
+            new_csv = line.replace(',', sep)
             line_count = line_count + 1
             continue
 
