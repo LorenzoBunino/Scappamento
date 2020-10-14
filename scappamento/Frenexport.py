@@ -24,6 +24,7 @@ def __main__():
         query = f.read()
 
     # Database connection and query
+    print('Connecting to database...')
     conn = msq.connect(host=host, database=database, user=user, password=password)
     results = pandas.read_sql_query(query, conn)
     conn.close()
@@ -31,18 +32,19 @@ def __main__():
     # Result cleanup: separator, fields
     results_clean = results.replace(';', ',', regex=True)  # replace instances of to-be CSV separator character
 
-    for i in range(0, len(results.index)):  # lower() is tailored to query, clean product "pretty name"
-        if results_clean.at[i, 'MARCA'].lower() in results_clean.at[i, 'DES_ART']:
-            results_clean.at[i, 'DES_ART'] = results_clean.at[i, 'DES_ART']\
-                .replace(' ' + results_clean.at[i, 'MARCA'].lower(), '')
-            # print('[ Row', i + 1, '] Found marca:', results_clean.at[i, 'DES_ART'])
+    for i in range(0, len(results.index)):  # clean product "pretty name", remove instances of other fields' content
+        des_art_temp = results_clean.at[i, 'DES_ART']  # cache fields instead of accessing dataframe x times
+        marca_temp = results_clean.at[i, 'MARCA'].lower()  # lower() is tailored to query file currently in use
+        modello_temp = results_clean.at[i, 'MODELLO'].lower()
 
-        if results_clean.at[i, 'MODELLO'].lower() in results_clean.at[i, 'DES_ART']:
-            results_clean.at[i, 'DES_ART'] = results_clean.at[i, 'DES_ART']\
-                .replace(' ' + results_clean.at[i, 'MODELLO'].lower(), '')
-            # print('[ Row', i + 1, '] Found modello')
-    # results_clean.loc[results_clean['MARCA'] in results_clean['DES_ART'], 'DES_ART'] =
-    # TODO: catch 't70c' when <MODELLO> is 'T-70C, check if <MARCA> has the same issue'
+        if marca_temp and marca_temp in des_art_temp:
+            des_art_temp = des_art_temp.replace(' ' + marca_temp, '')  # update field for later checks
+            results_clean.at[i, 'DES_ART'] = des_art_temp
+
+        if modello_temp and modello_temp in des_art_temp:
+            results_clean.at[i, 'DES_ART'] = des_art_temp.replace(' ' + modello_temp, '')
+        elif modello_temp and modello_temp.replace('-', '') in des_art_temp:
+            results_clean.at[i, 'DES_ART'] = des_art_temp.replace(' ' + modello_temp.replace('-', ''), '')
 
     results_clean.to_csv(final_path + csv_filename, sep=';', index=False)
 
