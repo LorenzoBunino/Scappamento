@@ -63,7 +63,7 @@ def __main__():
     list_xls = pd.read_excel(final_path + excel_filename, header=None)
 
     # Check file format
-    if len(list_xls.columns) != expected_columns_len:  # check for usual header size
+    if len(list_xls.columns) != int(expected_columns_len):  # check for usual header size
         print("Unexpected datasheet header size")
         sys.exit()
 
