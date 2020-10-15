@@ -92,8 +92,9 @@ def __main__():
 
         # Switch from Selenium to Requests, download inventory Excel file
         with session() as s:
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                                     "Chrome/44.0.2403.157 Safari/537.36 "
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 "
+                              "(KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36 "
                        }
             s.headers.update(headers)
             for cookie in driver.get_cookies():
