@@ -5,6 +5,10 @@
 import configparser
 
 
+class ScappamentoError(Exception):
+    pass
+
+
 def get_config(name, key_list_str, path):
     config = configparser.ConfigParser()
 
