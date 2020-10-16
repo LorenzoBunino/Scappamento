@@ -15,5 +15,5 @@ Spiritfarer is a great game
 TODO:
 
 yamaha | fender | proel | frenexport | suonostore | musicpool | mepa
-- | - | - | - | - | - | -
+-- | -- | -- | -- | -- | -- | --
 test1 | a2 | 3g | 4t | 5g | 6q | 7a
