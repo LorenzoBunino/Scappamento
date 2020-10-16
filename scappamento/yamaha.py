@@ -1,8 +1,8 @@
 # --- Yamaha ---
 # Read config file
 # Log into B2B website
-# Download Excel product list
-# Clean Excel table and convert to CSV
+# Download Excel product list (no disk)
+# Clean Excel table,convert to CSV, save
 
 import scappamento._common
 from requests import session

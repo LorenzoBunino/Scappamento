@@ -1,7 +1,7 @@
 # --- MusicPool ---
 # Read config file
 # Log into B2B website
-# Download Excel file into dataframe
+# Download Excel file into dataframe (no disk)
 # Check column count
 # Clean file content
 # Convert to CSV

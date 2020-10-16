@@ -1,6 +1,6 @@
 # --- Fender ---
 # Read config file
-# Log into website
+# Log into B2B website
 # Download pre-made inventory Excel file
 # Download custom-selected "specs" Excel file
 # Convert both files to CSV
