@@ -18,7 +18,7 @@ Spiritfarer is a nice game
 
 |          :broccoli:           | yamaha             | fender             | proel              | frenexport         | suonostore         | musicpool          | mepa               | _common            |
 |:-----------------------------:|:-------------------|:-------------------|:-------------------|:-------------------|:-------------------|:-------------------|:-------------------|:-------------------|
-|       No write to disk        | :heavy_check_mark: | :heavy_check_mark: | :x:                | :x:                | :heavy_check_mark: | :heavy_check_mark: | :x:                | :heavy_minus_sign: |
+|       No write to disk        | :heavy_check_mark: | :heavy_check_mark: | :x:                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :x:                | :heavy_minus_sign: |
 |     Handle missing config     | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                |
 |        Default config         | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | :x:                |
 |    Config default location    | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | :heavy_minus_sign: | :x:                |
