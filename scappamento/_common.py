@@ -9,15 +9,14 @@ class ScappamentoError(Exception):
     pass
 
 
-def get_config(name, key_list_str, path):
+def get_config(supplier_name, key_list, config_path):
     config = configparser.ConfigParser()
 
-    with open(path) as f:
+    with open(config_path) as f:
         config.read_file(f)
 
-        key_list_str = key_list_str.split(', ')
         val_list = []
-        for key in key_list_str:
-            val_list.append(config[name][key])
+        for key in key_list:
+            val_list.append(config[supplier_name][key])
 
     return val_list
