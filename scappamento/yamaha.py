@@ -10,19 +10,19 @@ import pandas as pd
 
 
 def __main__():
-    name = 'Yamaha'
-    print('--', name, '--\n')
+    supplier_name = 'Yamaha'
+    print('--', supplier_name, '--\n')
 
     # Credentials and URLs
-    key_list = 'email, ' \
-               'password, ' \
-               'login_url, ' \
-               'form_action_url, ' \
-               'xls_url, ' \
-               'logout_url, ' \
-               'csv_filename, ' \
-               'final_path, ' \
-               'expected_columns_len'
+    key_list_string = ['email',
+                       'password',
+                       'login_url',
+                       'form_action_url',
+                       'xls_url',
+                       'logout_url',
+                       'csv_filename',
+                       'final_path',
+                       'expected_columns_len']
 
     config_path = 'C:\\Ready\\ReadyPro\\Archivi\\Yamaha.ini'
 
@@ -34,7 +34,7 @@ def __main__():
      logout_url,
      csv_filename,
      final_path,
-     expected_columns_len] = scappamento._common.get_config(name, key_list, config_path)
+     expected_columns_len] = scappamento._common.get_config(supplier_name, key_list_string, config_path)
 
     with session() as s:
         # Login
