@@ -23,12 +23,6 @@ def __main__():
         # Site uses HTTP Basic Auth
         r = s.get(csv_url, auth=(user, password), headers={'User-Agent': 'Chrome'})
 
-        chunks = []
-        for chunk in r.iter_content(chunk_size=128):
-            chunks.append(chunk)
-        encoding = r.encoding
-        csv_file = b''.join(chunks).decode(encoding if encoding is not None else 'utf-8')
-
     # Cleanup: numbers, separators, dates, <inches> symbols
     sep = ';'
     new_csv = ''
@@ -37,7 +31,7 @@ def __main__():
     problematic_field_count = 0
     fixed_problematic_line_count = 0
 
-    for line in csv_file:
+    for line in r.content.decode(r.encoding).splitlines():  # each line in the CSV file
 
         if not line_count:  # skip first line = CSV header
             new_csv = line.replace(',', sep)
@@ -88,7 +82,7 @@ def __main__():
                 fixed_problematic_line_count = fixed_problematic_line_count + 1
             problematic_line_count = problematic_line_count + 1
 
-        new_csv = new_csv + rebuilt_temp_line
+        new_csv = new_csv + '\n' + rebuilt_temp_line.strip()
         line_count = line_count + 1
 
     if problematic_field_count:
@@ -97,7 +91,7 @@ def __main__():
               '' if problematic_line_count < 2 else 's', ' (', problematic_line_count, ' lines total, ',
               fixed_problematic_line_count, ' fixed)', sep='')
 
-    with open(final_path + csv_filename, 'w', encoding="utf-8") as f:
+    with open(final_path + csv_filename, 'w', encoding='utf-8') as f:
         f.write(new_csv)
 
 
