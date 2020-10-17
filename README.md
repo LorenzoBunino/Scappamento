@@ -30,3 +30,5 @@ Spiritfarer is a nice game
 |        _common config         | :heavy_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
 | "final_path" to "target_path" | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
 |     OS-independent paths      | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
+
+New commit labels: `fix`, `feat`, `test`, `refactor`, `perf`
