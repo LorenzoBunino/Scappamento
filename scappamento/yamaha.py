@@ -4,27 +4,32 @@
 # Download Excel product list (no disk)
 # Clean Excel table,convert to CSV, save
 
-import scappamento._common
+# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
+import scappamento.supplier
 from requests import session
 import pandas as pd
 
 
 def __main__():
     supplier_name = 'Yamaha'
-    print('--', supplier_name, '--\n')
+    yamaha = scappamento.supplier.Supplier(supplier_name)
+
+    print(yamaha)
 
     # Credentials and URLs
-    key_list_string = ['email',
-                       'password',
-                       'login_url',
-                       'form_action_url',
-                       'xls_url',
-                       'logout_url',
-                       'csv_filename',
-                       'final_path',
-                       'expected_columns_len']
+    key_list = ['email',
+                'password',
+                'login_url',
+                'form_action_url',
+                'xls_url',
+                'logout_url',
+                'csv_filename',
+                'final_path',
+                'expected_columns_len']
 
-    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\Yamaha.ini'
+    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
+
+    yamaha.load_config(key_list, config_path)
 
     [email,
      password,
@@ -34,7 +39,7 @@ def __main__():
      logout_url,
      csv_filename,
      final_path,
-     expected_columns_len] = scappamento._common.get_config(supplier_name, key_list_string, config_path)
+     expected_columns_len] = yamaha.val_list
 
     with session() as s:
         # Login
@@ -55,7 +60,7 @@ def __main__():
 
     # Check file format
     if len(list_xls.columns) != int(expected_columns_len):  # check for usual header size
-        raise scappamento._common.ScappamentoError("Unexpected datasheet header size")
+        raise scappamento.supplier.ScappamentoError("Unexpected datasheet header size")
 
     # Edit, convert & save, delete original file
     list_xls.drop([0, 1, 2, 3, 4, 5], inplace=True)
