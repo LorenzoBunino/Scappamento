@@ -17,6 +17,7 @@ def __main__():
     print(yamaha)
 
     # Credentials and URLs
+    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
     key_list = ['email',
                 'password',
                 'login_url',
@@ -26,8 +27,6 @@ def __main__():
                 'csv_filename',
                 'final_path',
                 'expected_columns_len']
-
-    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
 
     yamaha.load_config(key_list, config_path)
 

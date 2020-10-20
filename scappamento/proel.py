@@ -1,14 +1,25 @@
+# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
+import scappamento.supplier
 import pandas as pd
 
 
 def __main__():
-    print('-- Proel --')
+    supplier_name = 'Proel'
+    proel = scappamento.supplier.Supplier(supplier_name)
 
-    # FILENAMES
-    csv_filename_1 = 'EDI01_ITA.csv'
-    csv_filename_2 = 'EDI02_ITA.csv'
+    print(proel)
 
-    # mapping header from csv2 to csv1
+    # Config
+    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
+    key_list = ['csv_filename_1',
+                'csv_filename_2']
+
+    proel.load_config(key_list, config_path)
+
+    [csv_filename_1,
+     csv_filename_2] = proel.val_list
+
+    # Mapping header from csv2 to csv1
     headers_map = {'Product_name': 'PRODUCT_CODE',
                    'Cat_1': 'CAT_1',
                    'Lead Time': 'LEAD_TIME'}
