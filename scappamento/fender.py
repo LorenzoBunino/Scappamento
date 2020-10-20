@@ -1,11 +1,12 @@
 # --- Fender ---
 # Read config file
 # Log into B2B website
-# Download pre-made inventory Excel file
-# Download custom-selected "specs" Excel file
+# Download pre-made inventory Excel file (no disk)
+# Download custom-selected "specs" Excel file (no disk)
 # Convert both files to CSV
 
-import configparser
+# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
+import scappamento.supplier
 from requests import session
 import chromedriver_binary  # Add ChromeDriver binary to path
 from selenium import webdriver  # needs ChromeDriver
@@ -16,21 +17,31 @@ import pandas as pd
 
 
 def __main__():
-    print('-- Fender --\n')
+    supplier_name = 'Fender'
+    fender = scappamento.supplier.Supplier(supplier_name)
+
+    print(fender)
 
     # Credentials and URLs
-    config = configparser.ConfigParser()
-    with open('C:\\Ready\\ReadyPro\\Archivi\\Fender.ini') as f:
-        config.read_file(f)
+    key_list = ['email',
+                'password',
+                'login_url',
+                'xlsx_specs_url',
+                'csv_inventory_filename',
+                'csv_specs_filename',
+                'final_path']
 
-        email = config['dealer.fender.com']['email']
-        password = config['dealer.fender.com']['password']
-        login_url = config['dealer.fender.com']['login_url']
-        xlsx_specs_url = config['dealer.fender.com']['xlsx_specs_url']
+    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
 
-        csv_inventory_filename = config['ReadyPro']['csv_inventory_filename']
-        csv_specs_filename = config['ReadyPro']['csv_specs_filename']
-        final_path = config['ReadyPro']['final_path']
+    fender.load_config(key_list, config_path)
+
+    [email,
+     password,
+     login_url,
+     xlsx_specs_url,
+     csv_inventory_filename,
+     csv_specs_filename,
+     final_path] = fender.val_list
 
     chromedriver_path = chromedriver_binary.chromedriver_filename
     options = webdriver.ChromeOptions()
@@ -74,7 +85,7 @@ def __main__():
             print('Downloading specs...')
             r_specs = s.get(xlsx_specs_url)  # download specs Excel file
 
-            # Logout
+            # Logout (Selenium)
             logout_dropdown_button = driver.find_element(By.CLASS_NAME, 'dropdown-toggle')
             logout_dropdown_button.click()
             logout_button = driver.find_element(By.CSS_SELECTOR, '.dropdown-menu>li>a>i.fa-sign-out')
