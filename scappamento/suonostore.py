@@ -1,3 +1,6 @@
+# --- Suonostore ---
+# TODO: complete
+
 # from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
 import scappamento.supplier
 from requests import Session

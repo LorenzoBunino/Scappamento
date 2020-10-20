@@ -1,3 +1,6 @@
+# --- Proel ---
+# WIP, will be used to merge 2 incomplete / conflicting CSV files
+
 # from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
 import scappamento.supplier
 import pandas as pd

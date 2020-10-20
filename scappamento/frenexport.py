@@ -1,3 +1,9 @@
+# --- Frenexport ---
+# Read config file
+# Connect to B2B database
+# Execute query (no disk)
+# Clean response, convert to CSV, save
+
 # from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
 import scappamento.supplier
 import mysql.connector as msq
