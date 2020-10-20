@@ -27,7 +27,7 @@ Spiritfarer is a nice game
 |       Column name check       | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
 |      Column layout check      | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
 |      "Exit code" to file      | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
-|        _common config         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
+|        _common config         | :heavy_check_mark: | :heavy_check_mark: | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
 | "final_path" to "target_path" | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
 |     OS-independent paths      | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
 
