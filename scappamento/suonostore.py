@@ -1,21 +1,29 @@
-import configparser
+# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
+import scappamento.supplier
 from requests import Session
 
 
 def __main__():
-    print('-- Suonostore --\n')
+    supplier_name = 'Suonostore'
+    suonostore = scappamento.supplier.Supplier(supplier_name)
+
+    print(suonostore)
 
     # Credentials and URLs
-    config = configparser.ConfigParser()
-    with open('C:\\Ready\\ReadyPro\\Archivi\\Suonostore.ini') as f:
-        config.read_file(f)
+    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
+    key_list = ['user',
+                'password',
+                'csv_url',
+                'csv_filename',
+                'final_path']
 
-        user = config['suonostore.com']['user']
-        password = config['suonostore.com']['password']
-        csv_url = config['suonostore.com']['csv_url']
+    suonostore.load_config(key_list, config_path)
 
-        csv_filename = config['ReadyPro']['csv_filename']
-        final_path = config['ReadyPro']['final_path']
+    [user,
+     password,
+     csv_url,
+     csv_filename,
+     final_path] = suonostore.val_list
 
     # Download
     with Session() as s:

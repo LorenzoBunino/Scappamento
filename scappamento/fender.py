@@ -23,6 +23,7 @@ def __main__():
     print(fender)
 
     # Credentials and URLs
+    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
     key_list = ['email',
                 'password',
                 'login_url',
@@ -30,8 +31,6 @@ def __main__():
                 'csv_inventory_filename',
                 'csv_specs_filename',
                 'final_path']
-
-    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
 
     fender.load_config(key_list, config_path)
 

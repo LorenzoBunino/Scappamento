@@ -1,16 +1,25 @@
-import configparser
+# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
+import scappamento.supplier
 import pandas as pd
 
 
 def __main__():
-    print('--MEPA--')
+    supplier_name = 'MEPA'
+    mepa = scappamento.supplier.Supplier(supplier_name)
+
+    print(mepa)
 
     # Config
-    config = configparser.ConfigParser()
-    with open('MEPA.ini') as f:
-        config.read_file(f)
+    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
+    key_list = ['excel_filename',
+                'ref_excel_filename']
 
-        excel_filename = config['ReadyPro']['excel_filename']
+    mepa.load_config(key_list, config_path)
+
+    [excel_filename,
+     ref_excel_filename] = mepa.val_list
+
+    # Do stuff
 
     xls = pd.read_excel(excel_filename, header=None)
     'Access||Accu Case||Acorn||ADAM Professional Audio'

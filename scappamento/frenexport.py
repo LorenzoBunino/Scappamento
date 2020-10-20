@@ -1,26 +1,36 @@
-import configparser
+# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
+import scappamento.supplier
 import mysql.connector as msq
 import pandas
 
 
 def __main__():
-    print('-- Frenexport --\n')
+    supplier_name = 'Frenexport'
+    frenexport = scappamento.supplier.Supplier(supplier_name)
+
+    print(frenexport)
 
     # Credentials and URLs
-    config = configparser.ConfigParser()
-    with open('C:\\Ready\\ReadyPro\\Archivi\\Frenexport.ini') as f:
-        config.read_file(f)
+    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
+    key_list = ['host',
+                'database',
+                'user',
+                'password',
+                'sql_filename',
+                'csv_filename',
+                'final_path']
 
-        host = config['myfrenex.com']['host']
-        database = config['myfrenex.com']['database']
-        user = config['myfrenex.com']['user']
-        password = config['myfrenex.com']['password']
+    frenexport.load_config(key_list, config_path)
 
-        sql_filename = config['ReadyPro']['sql_filename']  # retrieve file with which to query the database
-        csv_filename = config['ReadyPro']['csv_filename']
-        final_path = config['ReadyPro']['final_path']
+    [host,
+     database,
+     user,
+     password,
+     sql_filename,
+     csv_filename,
+     final_path] = frenexport.val_list
 
-    with open(final_path + sql_filename) as f:
+    with open(final_path + sql_filename) as f:  # file with which to query the database
         query = f.read()
 
     # Database connection and query

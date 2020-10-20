@@ -6,7 +6,8 @@
 # Clean file content
 # Convert to CSV
 
-import configparser
+# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
+import scappamento.supplier
 from requests import session
 from bs4 import BeautifulSoup
 import re
@@ -15,21 +16,30 @@ import sys
 
 
 def __main__():
-    print('-- MusicPool --')
+    supplier_name = 'MusicPool'
+    musicpool = scappamento.supplier.Supplier(supplier_name)
+
+    print(musicpool)
 
     # Credentials and URLs
-    with open('C:\\Ready\\ReadyPro\\Archivi\\MusicPool.ini') as f:
-        config = configparser.ConfigParser()
-        config.read_file(f)
+    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
+    key_list = ['email',
+                'password',
+                'login_url',
+                'form_action_url',
+                'csv_filename',
+                'final_path',
+                'expected_columns_len']
 
-        email = config['musicpool.it']['email']
-        password = config['musicpool.it']['password']
-        login_url = config['musicpool.it']['login_url']
-        form_action_url = config['musicpool.it']['form_action_url']
+    musicpool.load_config(key_list, config_path)
 
-        csv_filename = config['ReadyPro']['csv_filename']
-        final_path = config['ReadyPro']['final_path']
-        expected_columns_len = config['ReadyPro']['expected_columns_len']
+    [email,
+     password,
+     login_url,
+     form_action_url,
+     csv_filename,
+     final_path,
+     expected_columns_len] = musicpool.val_list
 
     with session() as s:
         # Login
