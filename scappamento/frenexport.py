@@ -10,7 +10,7 @@ import mysql.connector as msq
 import pandas
 
 
-def __main__():
+def update():
     supplier_name = 'Frenexport'
     frenexport = scappamento.supplier.Supplier(supplier_name)
 
@@ -71,4 +71,4 @@ def __main__():
 
 
 if __name__ == '__main__':
-    __main__()
+    update()

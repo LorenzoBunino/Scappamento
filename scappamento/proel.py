@@ -6,7 +6,7 @@ import scappamento.supplier
 import pandas as pd
 
 
-def __main__():
+def update():
     supplier_name = 'Proel'
     proel = scappamento.supplier.Supplier(supplier_name)
 
@@ -51,4 +51,4 @@ def __main__():
 
 
 if __name__ == '__main__':
-    __main__()
+    update()

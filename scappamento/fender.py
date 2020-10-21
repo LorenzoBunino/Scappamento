@@ -16,7 +16,7 @@ from selenium.webdriver.support import expected_conditions as ec
 import pandas as pd
 
 
-def __main__():
+def update():
     supplier_name = 'Fender'
     fender = scappamento.supplier.Supplier(supplier_name)
 
@@ -100,4 +100,4 @@ def __main__():
 
 
 if __name__ == '__main__':
-    __main__()
+    update()

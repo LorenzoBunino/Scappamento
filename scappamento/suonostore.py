@@ -6,7 +6,7 @@ import scappamento.supplier
 from requests import Session
 
 
-def __main__():
+def update():
     supplier_name = 'Suonostore'
     suonostore = scappamento.supplier.Supplier(supplier_name)
 
@@ -107,4 +107,4 @@ def __main__():
 
 
 if __name__ == '__main__':
-    __main__()
+    update()

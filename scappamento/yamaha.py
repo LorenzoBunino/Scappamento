@@ -10,7 +10,7 @@ from requests import session
 import pandas as pd
 
 
-def __main__():
+def update():
     supplier_name = 'Yamaha'
     yamaha = scappamento.supplier.Supplier(supplier_name)
 
@@ -67,4 +67,4 @@ def __main__():
 
 
 if __name__ == '__main__':
-    __main__()
+    update()

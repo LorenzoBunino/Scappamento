@@ -15,7 +15,7 @@ import pandas as pd
 import sys
 
 
-def __main__():
+def update():
     supplier_name = 'MusicPool'
     musicpool = scappamento.supplier.Supplier(supplier_name)
 
@@ -67,4 +67,4 @@ def __main__():
 
 
 if __name__ == '__main__':
-    __main__()
+    update()
