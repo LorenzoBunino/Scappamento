@@ -13,6 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/lorenzobunino/scappamento",
     packages=setuptools.find_packages(),  # TODO: find_packages vs hand-compiled list
+    scripts=['bin/scappamento.py'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
