@@ -25,7 +25,7 @@ def __main__():
                 'xls_url',
                 'logout_url',
                 'csv_filename',
-                'final_path',
+                'target_path',
                 'expected_columns_len']
 
     yamaha.load_config(key_list, config_path)
@@ -37,7 +37,7 @@ def __main__():
      xls_url,
      logout_url,
      csv_filename,
-     final_path,
+     target_path,
      expected_columns_len] = yamaha.val_list
 
     with session() as s:
@@ -63,7 +63,7 @@ def __main__():
 
     # Edit, convert & save, delete original file
     list_xls.drop([0, 1, 2, 3, 4, 5], inplace=True)
-    list_xls.to_csv(final_path + csv_filename, sep=';', header=None, index=False, encoding='utf-8')
+    list_xls.to_csv(target_path + csv_filename, sep=';', header=None, index=False, encoding='utf-8')
 
 
 if __name__ == '__main__':

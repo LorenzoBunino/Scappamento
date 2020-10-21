@@ -24,7 +24,7 @@ def __main__():
                 'password',
                 'sql_filename',
                 'csv_filename',
-                'final_path']
+                'target_path']
 
     frenexport.load_config(key_list, config_path)
 
@@ -34,9 +34,9 @@ def __main__():
      password,
      sql_filename,
      csv_filename,
-     final_path] = frenexport.val_list
+     target_path] = frenexport.val_list
 
-    with open(final_path + sql_filename) as f:  # file with which to query the database
+    with open(target_path + sql_filename) as f:  # file with which to query the database
         query = f.read()
 
     # Database connection and query
@@ -62,7 +62,7 @@ def __main__():
         elif modello_temp and modello_temp.replace('-', '') in des_art_temp:
             results_clean.at[i, 'DES_ART'] = des_art_temp.replace(' ' + modello_temp.replace('-', ''), '')
 
-    results_clean.to_csv(final_path + csv_filename, sep=';', index=False)
+    results_clean.to_csv(target_path + csv_filename, sep=';', index=False)
 
 
 if __name__ == '__main__':

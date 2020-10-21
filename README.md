@@ -28,7 +28,7 @@ Spiritfarer is a nice game
 |      Column layout check      | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
 |      "Exit code" to file      | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
 |        _common config         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: |
-| "final_path" to "target_path" | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
+| "final_path" to "target_path" | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: |
 |     OS-independent paths      | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :x:                | :heavy_minus_sign: |
 
 New commit labels: `fix`, `feat`, `test`, `refactor`, `perf`

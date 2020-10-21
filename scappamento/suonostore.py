@@ -18,7 +18,7 @@ def __main__():
                 'password',
                 'csv_url',
                 'csv_filename',
-                'final_path']
+                'target_path']
 
     suonostore.load_config(key_list, config_path)
 
@@ -26,7 +26,7 @@ def __main__():
      password,
      csv_url,
      csv_filename,
-     final_path] = suonostore.val_list
+     target_path] = suonostore.val_list
 
     # Download
     with Session() as s:
@@ -102,7 +102,7 @@ def __main__():
               '' if problematic_line_count < 2 else 's', ' (', problematic_line_count, ' lines total, ',
               fixed_problematic_line_count, ' fixed)', sep='')
 
-    with open(final_path + csv_filename, 'w', encoding='utf-8') as f:
+    with open(target_path + csv_filename, 'w', encoding='utf-8') as f:
         f.write(new_csv)
 
 

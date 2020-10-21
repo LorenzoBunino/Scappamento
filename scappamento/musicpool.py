@@ -28,7 +28,7 @@ def __main__():
                 'login_url',
                 'form_action_url',
                 'csv_filename',
-                'final_path',
+                'target_path',
                 'expected_columns_len']
 
     musicpool.load_config(key_list, config_path)
@@ -38,7 +38,7 @@ def __main__():
      login_url,
      form_action_url,
      csv_filename,
-     final_path,
+     target_path,
      expected_columns_len] = musicpool.val_list
 
     with session() as s:
@@ -63,7 +63,7 @@ def __main__():
             sys.exit()
 
         xlsx_list.drop([1], inplace=True)
-        xlsx_list.to_csv(final_path + csv_filename, sep=';', index=False, header=None)
+        xlsx_list.to_csv(target_path + csv_filename, sep=';', index=False, header=None)
 
 
 if __name__ == '__main__':

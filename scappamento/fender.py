@@ -30,7 +30,7 @@ def __main__():
                 'xlsx_specs_url',
                 'csv_inventory_filename',
                 'csv_specs_filename',
-                'final_path']
+                'target_path']
 
     fender.load_config(key_list, config_path)
 
@@ -40,11 +40,11 @@ def __main__():
      xlsx_specs_url,
      csv_inventory_filename,
      csv_specs_filename,
-     final_path] = fender.val_list
+     target_path] = fender.val_list
 
     chromedriver_path = chromedriver_binary.chromedriver_filename
     options = webdriver.ChromeOptions()
-    prefs = {'download.default_directory': final_path,
+    prefs = {'download.default_directory': target_path,
              'download.prompt_for_download': False,
              'download.directory_upgrade': True}
     options.add_experimental_option('prefs', prefs)
@@ -93,10 +93,10 @@ def __main__():
     # Convert to CSV and save
     # TODO: check header size and column names
     inventory_list_xlsx = pd.read_excel(r_inventory.content, header=None)
-    inventory_list_xlsx.to_csv(final_path + csv_inventory_filename, sep=';', header=None, index=False)
+    inventory_list_xlsx.to_csv(target_path + csv_inventory_filename, sep=';', header=None, index=False)
 
     specs_list_xlsx = pd.read_excel(r_specs.content, header=None)
-    specs_list_xlsx.to_csv(final_path + csv_specs_filename, sep=';', header=None, index=False)
+    specs_list_xlsx.to_csv(target_path + csv_specs_filename, sep=';', header=None, index=False)
 
 
 if __name__ == '__main__':
