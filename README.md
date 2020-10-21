@@ -14,8 +14,9 @@ Spiritfarer is a nice game
 
 ### TODO
 - [ ] Module / Package
-- [ ] CLI
+- [x] CLI (WIP)
 - [ ] First release
+- [ ] Move TODO to Trello
 
 |          :broccoli:           | yamaha             | fender             | proel              | frenexport         | suonostore         | musicpool          | mepa               | _common            |
 |:-----------------------------:|:-------------------|:-------------------|:-------------------|:-------------------|:-------------------|:-------------------|:-------------------|:-------------------|
