@@ -11,3 +11,6 @@
 
 # Lorenzo random local files
 /Utils
+/build
+/dist
+/venv
