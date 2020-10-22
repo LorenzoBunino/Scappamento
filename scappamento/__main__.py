@@ -1,19 +1,25 @@
-# User-facing script for scappamento usage
+# User-facing CLI
+# Top-level script for scappamento usage
 
+import sys
 import argparse
+
 from scappamento import yamaha
 from scappamento import fender
 from scappamento import frenexport
 from scappamento import suonostore
 
 
-def __main__():
+def main(args=None):
+    # if args is None:
+    #     args = sys.argv[1:]
+
     suppliers_list = ['yamaha', 'fender', 'frenexport', 'suonostore']
     updaters_list = [yamaha.update, fender.update, frenexport.update, suonostore.update]
     suppliers_help = 'the supplier to be updated'
 
     parser = argparse.ArgumentParser(description='Automate B2B provisioning.')
-    parser.add_argument('supplier_name', choices=suppliers_list, required=True, help=suppliers_help)
+    parser.add_argument('supplier_name', choices=suppliers_list, help=suppliers_help)
 
     namespace = parser.parse_args()
 
@@ -25,4 +31,4 @@ def __main__():
 
 
 if __name__ == '__main__':
-    __main__()
+    sys.exit(main())

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='scappamento',
-    version='0.1a1',  # TODO: decide first version identifier
+    version='0.1a2',
     author='Lorenzo Bunino',
     author_email="bunino.lorenzo@gmail.com",
     description="B2B automation for music stores",
@@ -13,7 +13,11 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/lorenzobunino/scappamento",
     packages=setuptools.find_packages(),  # TODO: find_packages vs hand-compiled list
-    scripts=['bin/scappamento.py'],
+    entry_points={
+        'console_scripts': [
+            'scappamento = scappamento.__main__:main'
+        ]
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -22,6 +26,7 @@ setuptools.setup(
     ],
     install_requires=[
         'pandas~=1.1.2',
+        'xlrd~=1.2.0',
         'requests~=2.24.0',
         'selenium~=3.141.0',
         'beautifulsoup4~=4.9.3',
