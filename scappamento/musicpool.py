@@ -6,8 +6,7 @@
 # Clean file content
 # Convert to CSV
 
-# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
-import scappamento.supplier
+from .supplier import Supplier, ScappamentoError
 from requests import session
 from bs4 import BeautifulSoup
 import re
@@ -17,7 +16,7 @@ import sys
 
 def update():
     supplier_name = 'MusicPool'
-    musicpool = scappamento.supplier.Supplier(supplier_name)
+    musicpool = Supplier(supplier_name)
 
     print(musicpool)
 

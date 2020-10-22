@@ -5,8 +5,7 @@
 # Download custom-selected "specs" Excel file (no disk)
 # Convert both files to CSV
 
-# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
-import scappamento.supplier
+from .supplier import Supplier, ScappamentoError
 from requests import session
 import chromedriver_binary  # Add ChromeDriver binary to path
 from selenium import webdriver  # needs ChromeDriver
@@ -18,7 +17,7 @@ import pandas as pd
 
 def update():
     supplier_name = 'Fender'
-    fender = scappamento.supplier.Supplier(supplier_name)
+    fender = Supplier(supplier_name)
 
     print(fender)
 

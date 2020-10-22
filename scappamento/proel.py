@@ -1,14 +1,13 @@
 # --- Proel ---
 # WIP, will be used to merge 2 incomplete / conflicting CSV files
 
-# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
-import scappamento.supplier
+from .supplier import Supplier, ScappamentoError
 import pandas as pd
 
 
 def update():
     supplier_name = 'Proel'
-    proel = scappamento.supplier.Supplier(supplier_name)
+    proel = Supplier(supplier_name)
 
     print(proel)
 

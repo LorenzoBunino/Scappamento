@@ -1,14 +1,13 @@
 # --- Suonostore ---
 # TODO: complete
 
-# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
-import scappamento.supplier
+from .supplier import Supplier, ScappamentoError
 from requests import Session
 
 
 def update():
     supplier_name = 'Suonostore'
-    suonostore = scappamento.supplier.Supplier(supplier_name)
+    suonostore = Supplier(supplier_name)
 
     print(suonostore)
 

@@ -4,15 +4,14 @@
 # Execute query (no disk)
 # Clean response, convert to CSV, save
 
-# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
-import scappamento.supplier
+from .supplier import Supplier, ScappamentoError
 import mysql.connector as msq
 import pandas
 
 
 def update():
     supplier_name = 'Frenexport'
-    frenexport = scappamento.supplier.Supplier(supplier_name)
+    frenexport = Supplier(supplier_name)
 
     print(frenexport)
 
@@ -52,6 +51,7 @@ def update():
 
     edited_row_count = 0
     edited_field_count = 0
+    # TODO: info prints
     for i in range(0, len(results.index)):  # clean product "pretty name", remove instances of other fields' content
         des_art_temp = results_clean.at[i, 'DES_ART']  # cache fields instead of accessing dataframe x times
         marca_temp = results_clean.at[i, 'MARCA'].lower()  # lower() is tailored to query file currently in use

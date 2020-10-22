@@ -4,15 +4,14 @@
 # Download Excel product list (no disk)
 # Clean Excel table,convert to CSV, save
 
-# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
-import scappamento.supplier
+from .supplier import Supplier, ScappamentoError
 from requests import session
 import pandas as pd
 
 
 def update():
     supplier_name = 'Yamaha'
-    yamaha = scappamento.supplier.Supplier(supplier_name)
+    yamaha = Supplier(supplier_name)
 
     print(yamaha)
 
@@ -59,7 +58,7 @@ def update():
 
     # Check file format
     if len(list_xls.columns) != int(expected_columns_len):  # check for usual header size
-        raise scappamento.supplier.ScappamentoError("Unexpected datasheet header size")
+        raise ScappamentoError("Unexpected datasheet header size")
 
     # Edit, convert & save, delete original file
     list_xls.drop([0, 1, 2, 3, 4, 5], inplace=True)

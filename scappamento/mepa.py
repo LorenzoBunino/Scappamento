@@ -1,11 +1,10 @@
-# from .supplier import Supplier, ScappamentoError TODO: when script will be imported, not executed
-import scappamento.supplier
+from .supplier import Supplier, ScappamentoError
 import pandas as pd
 
 
-def __main__():
+def update():
     supplier_name = 'MEPA'
-    mepa = scappamento.supplier.Supplier(supplier_name)
+    mepa = Supplier(supplier_name)
 
     print(mepa)
 
@@ -55,4 +54,4 @@ def __main__():
 
 
 if __name__ == '__main__':
-    __main__()
+    update()
