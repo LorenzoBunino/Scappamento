@@ -11,6 +11,9 @@
 
 # Lorenzo random local files
 /Utils
+/config_old
 /build
 /dist
+/dist_old
+/scappamento.egg-info
 /venv
