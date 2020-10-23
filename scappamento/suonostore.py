@@ -1,5 +1,7 @@
 # --- Suonostore ---
-# TODO: complete
+# Read config file
+# Download CSV file (no disk)
+# Clean file, save
 
 from requests import Session
 

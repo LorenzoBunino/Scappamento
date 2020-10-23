@@ -1,3 +1,5 @@
+# TODO: description header
+
 from .supplier import Supplier, ScappamentoError
 import pandas as pd
 
