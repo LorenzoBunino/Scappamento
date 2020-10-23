@@ -27,3 +27,31 @@ class Supplier:
 
 class ScappamentoError(Exception):
     pass
+
+
+# scan line by double-quotes pairs
+# look for separator characters inside quote pairs
+# replace separator with sub
+# return fixed line, is_modified
+def fix_illegal_sep_quotes(line, sep, sep_replacement):
+    is_modified = False
+    in_quotes = False
+    new_line = ''
+    for char in line:
+        if char == '"':
+            in_quotes = not in_quotes  # toggle
+            new_line = new_line + char
+            continue
+
+        if in_quotes and char == sep:
+            new_line = new_line + sep_replacement
+            is_modified = True
+        else:
+            new_line = new_line + char
+
+    return new_line, is_modified
+
+
+# change from one separator character to another
+def switch_sep(line, sep_old, sep_new):
+    return line.replace(sep_old, '%temp%').replace(sep_new, sep_old).replace('%temp%', sep_new)  # flip old and new
