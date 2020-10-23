@@ -10,10 +10,7 @@ from scappamento import frenexport
 from scappamento import suonostore
 
 
-def main(args=None):
-    # if args is None:
-    #     args = sys.argv[1:]
-
+def main():
     suppliers_list = ['yamaha', 'fender', 'frenexport', 'suonostore']
     updaters_list = [yamaha.update, fender.update, frenexport.update, suonostore.update]
     suppliers_help = 'the supplier to be updated'
