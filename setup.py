@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='scappamento',
-    version='0.1a2',
+    version='0.1a3',
     author='Lorenzo Bunino',
     author_email="bunino.lorenzo@gmail.com",
     description="B2B automation for music stores",
