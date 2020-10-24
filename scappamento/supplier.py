@@ -9,8 +9,11 @@ class Supplier:
     name = ''
     val_list = []
 
-    def __init__(self, name):  # , key_list, config_path
+    def __init__(self, name, key_list=None, config_path=None):  # , key_list, config_path
         self.name = name
+
+        if key_list and config_path:
+            self.load_config(key_list, config_path)
 
     def __str__(self):
         return '-- ' + self.name + ' --\n'
