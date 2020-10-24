@@ -4,21 +4,26 @@
 
 import configparser
 
+default_config_path = 'C:\\Ready\\ReadyPro\\Archivi\\'
+default_config_name = 'scappamento.ini'
+
 
 class Supplier:
     name = ''
     val_list = []
 
-    def __init__(self, name, key_list=None, config_path=None):  # , key_list, config_path
+    def __init__(self, name, key_list=None, config_path=None):
         self.name = name
-
-        if key_list and config_path:
-            self.load_config(key_list, config_path)
+        if key_list:
+            if config_path:
+                self.load_config(key_list, config_path)
+            else:
+                self.load_config(key_list)
 
     def __str__(self):
         return '-- ' + self.name + ' --\n'
 
-    def load_config(self, key_list, config_path):
+    def load_config(self, key_list, config_path=default_config_path+default_config_name):
         config = configparser.ConfigParser()
 
         with open(config_path) as f:
