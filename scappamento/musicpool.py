@@ -6,22 +6,21 @@
 # Clean file content
 # Convert to CSV
 
-from .supplier import Supplier, ScappamentoError
+import sys
+import re
+
 from requests import session
 from bs4 import BeautifulSoup
-import re
 import pandas as pd
-import sys
+
+from .supplier import Supplier, ScappamentoError
+
+
+supplier_name = 'MusicPool'
 
 
 def update():
-    supplier_name = 'MusicPool'
-    musicpool = Supplier(supplier_name)
-
-    print(musicpool)
-
     # Credentials and URLs
-    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
     key_list = ['email',
                 'password',
                 'login_url',
@@ -29,8 +28,9 @@ def update():
                 'csv_filename',
                 'target_path',
                 'expected_columns_len']
+    musicpool = Supplier(supplier_name, key_list)
 
-    musicpool.load_config(key_list, config_path)
+    print(musicpool)
 
     [email,
      password,

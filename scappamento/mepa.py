@@ -1,30 +1,26 @@
 # TODO: description header
 
-from .supplier import Supplier, ScappamentoError
 from xlrd import open_workbook
 from xlutils.copy import copy
 
+from .supplier import Supplier, ScappamentoError
+
+
+supplier_name = 'MEPA'
+
 
 def update():
-    supplier_name = 'MEPA'
-    mepa = Supplier(supplier_name)
-
-    print(mepa)
-
-    # Config
-    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
+    # Config, filenames
     key_list = ['readypro_excel_filename',
                 'mepa_excel_filename']
+    mepa = Supplier(supplier_name, key_list)
 
-    mepa.load_config(key_list, config_path)
+    print(mepa)  # Title
 
     [readypro_excel_filename,
      mepa_excel_filename] = mepa.val_list
 
-    # Do stuff
-    # xls = pd.read_excel(excel_filename, header=None)
-    'Access||Accu Case||Acorn||ADAM Professional Audio'
-
+    # Copy data from generated spreadsheet to downloaded to-edit one
     readypro_xls = open_workbook(readypro_excel_filename)
     mepa_xls_model = open_workbook(mepa_excel_filename, formatting_info=True)
 
@@ -37,7 +33,7 @@ def update():
         for j in range(0, 20):
             mepa_inst_sheet.write(i, j, readypro_inst_sheet.cell_value(i, j))
 
-    mepa_xls_new.save('C:\\Ready\\ReadyPro\\Archivi\\newmepatest.xls')
+    mepa_xls_new.save('C:\\Ready\\ReadyPro\\Archivi\\newmepatest.xls')  # TODO: actual final name and path
 
 
 if __name__ == '__main__':

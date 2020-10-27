@@ -4,19 +4,17 @@
 # Execute query (no disk)
 # Clean response, convert to CSV, save
 
-from .supplier import Supplier, ScappamentoError
 import mysql.connector as msq
 import pandas
 
+from .supplier import Supplier, ScappamentoError
+
+
+supplier_name = 'Frenexport'
+
 
 def update():
-    supplier_name = 'Frenexport'
-    frenexport = Supplier(supplier_name)
-
-    print(frenexport)
-
     # Credentials and URLs
-    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
     key_list = ['host',
                 'database',
                 'user',
@@ -24,8 +22,9 @@ def update():
                 'sql_filename',
                 'csv_filename',
                 'target_path']
+    frenexport = Supplier(supplier_name, key_list)
 
-    frenexport.load_config(key_list, config_path)
+    print(frenexport)
 
     [host,
      database,

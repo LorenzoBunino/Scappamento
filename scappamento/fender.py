@@ -5,7 +5,6 @@
 # Download custom-selected "specs" Excel file (no disk)
 # Convert both files to CSV
 
-from .supplier import Supplier, ScappamentoError
 from requests import session
 import chromedriver_binary  # Add ChromeDriver binary to path
 from selenium import webdriver  # needs ChromeDriver
@@ -14,15 +13,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 import pandas as pd
 
+from .supplier import Supplier, ScappamentoError
+
+
+supplier_name = 'Fender'
+
 
 def update():
-    supplier_name = 'Fender'
-    fender = Supplier(supplier_name)
-
-    print(fender)
-
     # Credentials and URLs
-    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
     key_list = ['email',
                 'password',
                 'login_url',
@@ -30,8 +28,9 @@ def update():
                 'csv_inventory_filename',
                 'csv_specs_filename',
                 'target_path']
+    fender = Supplier(supplier_name, key_list)
 
-    fender.load_config(key_list, config_path)
+    print(fender)
 
     [email,
      password,

@@ -8,6 +8,9 @@ from requests import Session
 from .supplier import Supplier, ScappamentoError, fix_illegal_sep_quotes, switch_sep
 
 
+supplier_name = 'Suonostore'
+
+
 def fix_timestamp(line):
     return line.replace('00:00:00', '').replace('/  /', '')
 
@@ -17,20 +20,15 @@ def fix_decimals(line):
 
 
 def update():
-    supplier_name = 'Suonostore'
-    suonostore = Supplier(supplier_name)
-
-    print(suonostore)
-
     # Credentials and URLs
-    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
     key_list = ['user',
                 'password',
                 'csv_url',
                 'csv_filename',
                 'target_path']
+    suonostore = Supplier(supplier_name, key_list)
 
-    suonostore.load_config(key_list, config_path)
+    print(suonostore)
 
     [user,
      password,

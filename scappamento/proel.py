@@ -1,22 +1,21 @@
 # --- Proel ---
 # WIP, will be used to merge 2 incomplete / conflicting CSV files
 
-from .supplier import Supplier, ScappamentoError
 import pandas as pd
+
+from .supplier import Supplier, ScappamentoError
+
+
+supplier_name = 'Proel'
 
 
 def update():
-    supplier_name = 'Proel'
-    proel = Supplier(supplier_name)
-
-    print(proel)
-
     # Config
-    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
     key_list = ['csv_filename_1',
                 'csv_filename_2']
+    proel = Supplier(supplier_name, key_list)
 
-    proel.load_config(key_list, config_path)
+    print(proel)
 
     [csv_filename_1,
      csv_filename_2] = proel.val_list

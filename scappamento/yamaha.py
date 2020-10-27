@@ -4,19 +4,17 @@
 # Download Excel product list (no disk)
 # Clean Excel table,convert to CSV, save
 
-from .supplier import Supplier, ScappamentoError
 from requests import session
 import pandas as pd
 
+from .supplier import Supplier, ScappamentoError
+
+
+supplier_name = 'Yamaha'
+
 
 def update():
-    supplier_name = 'Yamaha'
-    yamaha = Supplier(supplier_name)
-
-    print(yamaha)
-
     # Credentials and URLs
-    config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento.ini'
     key_list = ['email',
                 'password',
                 'login_url',
@@ -26,8 +24,9 @@ def update():
                 'csv_filename',
                 'target_path',
                 'expected_columns_len']
+    yamaha = Supplier(supplier_name, key_list)
 
-    yamaha.load_config(key_list, config_path)
+    print(yamaha)
 
     [email,
      password,
