@@ -4,6 +4,9 @@
 
 import configparser
 
+import chromedriver_binary
+from selenium import webdriver
+
 default_config_path = 'C:\\Ready\\ReadyPro\\Archivi\\'
 default_config_name = 'scappamento.ini'
 
@@ -63,3 +66,34 @@ def fix_illegal_sep_quotes(line, sep, sep_replacement):
 # change from one separator character to another
 def switch_sep(line, sep_old, sep_new):
     return line.replace(sep_old, '%temp%').replace(sep_new, sep_old).replace('%temp%', sep_new)  # flip old and new
+
+
+# login into AJAX websites
+def browser_login(login_url, user_css_selector, user, password_css_selector, password, butt_css_selector,
+                  pop_css_selector=None):
+    chromedriver_path = chromedriver_binary.chromedriver_filename
+
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    with webdriver.Chrome(options=options) as driver:
+        # Login
+        print('ChromeDriver path:', chromedriver_path)
+        driver.get(login_url)
+
+        if pop_css_selector:
+            pop_up_butt = driver.find_element_by_css_selector(pop_css_selector)
+            pop_up_butt.click()
+
+        user_input = driver.find_element_by_css_selector(user_css_selector)
+        user_input.send_keys(user)
+
+        pass_input = driver.find_element_by_css_selector(password_css_selector)
+        pass_input.send_keys(password)
+
+        login_butt = driver.find_element_by_css_selector(butt_css_selector)
+        login_butt.click()
+
+        import os
+        os.system('pause')
+
+        return driver.get_cookies()
