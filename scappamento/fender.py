@@ -6,14 +6,9 @@
 # Convert both files to CSV
 
 from requests import session
-import chromedriver_binary  # Add ChromeDriver binary to path
-from selenium import webdriver  # needs ChromeDriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
 import pandas as pd
 
-from .supplier import Supplier, ScappamentoError
+from .supplier import Supplier, ScappamentoError, browser_login
 
 
 supplier_name = 'Fender'
@@ -22,8 +17,12 @@ supplier_name = 'Fender'
 def update():
     # Credentials and URLs
     key_list = ['email',
+                'email_css_selector',
                 'password',
+                'password_css_selector',
+                'butt_css_selector',
                 'login_url',
+                'xlsx_inventory_url',
                 'xlsx_specs_url',
                 'csv_inventory_filename',
                 'csv_specs_filename',
@@ -33,60 +32,36 @@ def update():
     print(fender)
 
     [email,
+     email_css_selector,
      password,
+     password_css_selector,
+     butt_css_selector,
      login_url,
+     xlsx_inventory_url,
      xlsx_specs_url,
      csv_inventory_filename,
      csv_specs_filename,
      target_path] = fender.val_list
 
-    chromedriver_path = chromedriver_binary.chromedriver_filename
-    options = webdriver.ChromeOptions()
-    prefs = {'download.default_directory': target_path,
-             'download.prompt_for_download': False,
-             'download.directory_upgrade': True}
-    options.add_experimental_option('prefs', prefs)
-    options.add_argument('--headless')
-    with webdriver.Chrome(options=options) as driver:
-        # Login
-        print('ChromeDriver path:', chromedriver_path, '\n\nLogging in...')
-        driver.get(login_url)
+    cookies = browser_login(login_url, email_css_selector, email, password_css_selector, password, butt_css_selector)
 
-        email_input = driver.find_element(By.ID, 'emailInput')
-        email_input.send_keys(email)
+    with session() as s:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 "
+                          "(KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36 "
+                   }
+        s.headers.update(headers)
+        for cookie in cookies:  # port session cookies over
+            c = {cookie['name']: cookie['value']}
+            s.cookies.update(c)
 
-        pass_input = driver.find_element(By.ID, 'passwordInput')
-        pass_input.send_keys(password)
+        print('Downloading inventory...')
+        r_inventory = s.get(xlsx_inventory_url)  # download inventory Excel file
 
-        login_butt = driver.find_element(By.ID, 'submitLoginButton')
-        login_butt.click()
+        print('Downloading specs...')
+        r_specs = s.get(xlsx_specs_url)  # download specs Excel file
 
-        excel_inventory_button = WebDriverWait(driver, timeout=4000) \
-            .until(ec.element_to_be_clickable((By.ID, 'inventoryDownloadButton')))
-        excel_inventory_url = excel_inventory_button.get_attribute('href')
-
-        # Switch from Selenium to Requests
-        with session() as s:
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 "
-                              "(KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36 "
-                       }
-            s.headers.update(headers)
-            for cookie in driver.get_cookies():  # port session cookies over
-                c = {cookie['name']: cookie['value']}
-                s.cookies.update(c)
-
-            print('Downloading inventory...')
-            r_inventory = s.get(excel_inventory_url)  # download inventory Excel file
-
-            print('Downloading specs...')
-            r_specs = s.get(xlsx_specs_url)  # download specs Excel file
-
-            # Logout (Selenium)
-            logout_dropdown_button = driver.find_element(By.CLASS_NAME, 'dropdown-toggle')
-            logout_dropdown_button.click()
-            logout_button = driver.find_element(By.CSS_SELECTOR, '.dropdown-menu>li>a>i.fa-sign-out')
-            logout_button.click()
+        # TODO: https://dealer.fender.com/logout POST
 
     # Convert to CSV and save
     # TODO: check header size and column names
