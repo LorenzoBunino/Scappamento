@@ -8,8 +8,9 @@ import os.path
 
 from xlrd import open_workbook
 from xlutils.copy import copy
+from requests import session
 
-from .supplier import Supplier, ScappamentoError
+from .supplier import Supplier, ScappamentoError, browser_login
 
 
 supplier_name = 'MEPA'
@@ -18,9 +19,18 @@ supplier_name = 'MEPA'
 def update():
     # Config, filenames
     key_list = ['readypro_excel_filename',  # TODO: more consistency in <filename> vs <fully qualified path> stuff
-                'mepa_excel_filename',  # TODO: Travis-CI, Trello
+                'mepa_excel_filename',
                 'new_excel_filename',
-                'target_path']
+                'target_path',
+                'login_url',
+                'sostituzione_url',
+                'upload_url',
+                'user',
+                'user_css_selector',
+                'password',
+                'password_css_selector',
+                'butt_css_selector',
+                'pop_css_selector']
     mepa = Supplier(supplier_name, key_list)
 
     print(mepa)  # Title
@@ -28,7 +38,16 @@ def update():
     [readypro_excel_filename,
      mepa_excel_filename,
      new_excel_filename,
-     target_path] = mepa.val_list
+     target_path,
+     login_url,
+     sostituzione_url,
+     upload_url,
+     user,
+     user_css_selector,
+     password,
+     password_css_selector,
+     butt_css_selector,
+     pop_css_selector] = mepa.val_list
 
     # Copy data from generated spreadsheet to downloaded to-edit one
     readypro_xls = open_workbook(readypro_excel_filename)
@@ -41,9 +60,62 @@ def update():
 
     for i in range(1, readypro_sheet.nrows):  # rows (skip header)
         for j in range(0, 20):  # cols
-            mepa_sheet.write(i, j, readypro_sheet.cell_value(i, j))
+            marca = False
+            for m in range(14, 18):  # Marca (A-D) = campo 14 (14 0-based with offset)
+                marca = marca or readypro_sheet.cell_value(i, m)
+
+            if marca and readypro_sheet.cell_value(i, 1):  # CodArt Produttore = campo 1
+                mepa_sheet.write(i, j, readypro_sheet.cell_value(i, j+1))  # offset read, column 0 is empty
 
     mepa_xls_new.save(os.path.join(target_path, new_excel_filename))
+
+    cookies = browser_login(login_url, user_css_selector, user, password_css_selector, password, butt_css_selector,
+                            pop_css_selector)
+
+    with session() as s:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 "
+                          "(KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36 "
+        }
+        s.headers.update(headers)
+        for cookie in cookies:  # port session cookies over
+            c = {cookie['name']: cookie['value']}
+            s.cookies.update(c)
+
+        pass  # do the thing
+        s.get('https://www.acquistinretepa.it/opencms/opencms/main/impresa/areapersonale/vendite/gestione_catal')
+        s.get('https://www.acquistinretepa.it/opencms/opencms/moduli/catportale')
+        s.get('https://www.acquistinretepa.it/catportale')
+        s.get('https://www.acquistinretepa.it/catportale/')
+        s.get('https://www.acquistinretepa.it/catportale/welcome.do')
+        s.get('https://www.acquistinretepa.it/catportale/login.do?adfgenDispatchAction=confirm')
+        s.get('https://www.acquistinretepa.it/catportale/welcome.do')
+        s.get(sostituzione_url)
+        # AUTO-UPLOAD
+        files = {'fileXLS': ('fileXLS.xls',
+                             open(os.path.join(target_path, new_excel_filename), 'rb'),
+                             'multipart/form-data')}
+        payload = {'button.submit.inviaFile': 'INVIA',
+                   'idFlusso': '', 'idProgressivo': ''}
+        r = s.post(upload_url, files=files)
+        print(r.text)
+
+        # TODO: Travis notes https://travis-ci.org/
+        #  https://www.google.com/search?q=python+travis+ci&oq=python+travis+ci&aqs=chrome..69i57j69i60l2j0i22i30l4.3591j0j1&sourceid=chrome&ie=UTF-8
+        #  https://docs.travis-ci.com/user/languages/python/
+        #  https://docs.travis-ci.com/user/tutorial/
+        #  https://docs.travis-ci.com/user/customizing-the-build/
+        #  https://blog.travis-ci.com/2019-08-07-extensive-python-testing-on-travis-ci
+        #  https://travis-ci.com/signup
+        #  https://docs.travis-ci.com/user/deployment/pypi/
+        #  https://realpython.com/python-testing/
+
+        # TODO: (old) Config default location (_common) is done
+        #  Handling missing config > creating default config might necessitate for
+        #   <key_list> to be public in all modules as well
+        #  -> Loop over modules (maybe the ones in exposed command list?)
+        #  treat module as class? call update() on module name, idk
+        #  write first test
 
 
 if __name__ == '__main__':
