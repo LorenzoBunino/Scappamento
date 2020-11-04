@@ -93,7 +93,4 @@ def browser_login(login_url, user_css_selector, user, password_css_selector, pas
         login_butt = driver.find_element_by_css_selector(butt_css_selector)
         login_butt.click()
 
-        import os
-        os.system('pause')
-
         return driver.get_cookies()
