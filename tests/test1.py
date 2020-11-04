@@ -1,3 +1,6 @@
 import scappamento
 
-scappamento.suonostore.__main__()
+scappamento.yamaha.__main__()
+# test = scappamento.supplier.Supplier(__name__)
+# print('Uh?', test.name)
+
