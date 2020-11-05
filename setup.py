@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
 
 setuptools.setup(
     name='scappamento',
-    version='0.1a4',
+    version='0.1a5',
     author='Lorenzo Bunino',
     author_email="bunino.lorenzo@gmail.com",
     description="B2B automation for music stores",
