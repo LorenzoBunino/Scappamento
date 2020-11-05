@@ -9,6 +9,7 @@ Supported suppliers / platforms:
 - [x] Suonostore
 - [ ] MusicPool (WIP, broken)
 - [x] acquistinretepa
+- [x] Mogar (Encoding conversion)
 
 :broccoli:
 
