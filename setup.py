@@ -1,5 +1,7 @@
 import setuptools
 
+from scappamento.__about__ import __version__
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
@@ -11,7 +13,7 @@ with open('requirements.txt') as f:
 
 setuptools.setup(
     name='scappamento',
-    version='0.1a6',
+    version=__version__,
     author='Lorenzo Bunino',
     author_email="bunino.lorenzo@gmail.com",
     description="B2B automation for music stores",
