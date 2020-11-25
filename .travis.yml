@@ -1,9 +1,13 @@
 language: python
 python:
-  - "3.8"
-# command to install dependencies
+- '3.8'
 install:
-  - pip install -r requirements.txt
-# command to run tests
-script:
-  python -m unittest discover -s tests
+- pip install -r requirements.txt
+script: python -m unittest discover -s tests
+notifications:
+  email: false
+deploy:
+  provider: pypi
+  username: __token__
+  password:
+    secure: GtIaf9BmJQ2MDJye5/kgfO85ZRuF5ArNmz+MwPBhHpYxxu6uHwzeE20LP9Cjr9y0RGt2jMcC7N4TwBd70fTITZg6LIgji651gSX4ALg4ypSDUdImDbjLTVUVE6ta8bvj8bHm2If2uhppjIRg3VE7F7wKobzei1hK6qP73h14GjHFjLUmKFagbveES09TJClRaqnOL6TFuKi/w3BbymUydBc0ditqc4p4o4BnaDFkk9ymBNQzLvFsR/xVbkFSoP7bEQQ7bGYSrTcYUB4RLChsxVdiOVmxWAg+9R744jI+BowQxwLmxcdIVv3si/W74TkHXbYCHYukz5VuI1qlt+PpY2pDIJ+GpgAMaOrLHrV0iNltNII8Mqw3hmomgUUdMVU8GqvbRbBZD6a8AYlKNj8a9g/b4/ZkOdkKZDW5VOtYwbUlsb7FaDLa0xtKIIA2XoApczNebSBWWXJZaSPk9/Wf98z/9+exXjj0VfqlBENQ18/O0I+hhzw51oa6ATVXSm+OapAx+oIEimPrL6oZslYDsplw5TmMmlo20ehzhDhRPwiF3Q2UIwIHvR02mys55Zu9RwF7FMKL5/RIrI0RZfQn7H57vh6TpmeL2jFYFpQs1wKi2kafGo9Zjv9anv4SLJ3PQSpwCT5PWDGFOFYb04HmhiRusfjU3LT4B96hJBbBdvY=
