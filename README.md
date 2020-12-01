@@ -1,4 +1,4 @@
-![Icon](images/icon@128.png)
+![Icon](https://github.com/LorenzoBunino/scappamento/raw/master/images/icon%40128.png)
 # scappamento
 [![License](https://img.shields.io/github/license/LorenzoBunino/scappamento)]()
 [![Build Status](https://travis-ci.com/LorenzoBunino/scappamento.svg?branch=master)](https://travis-ci.com/LorenzoBunino/scappamento)
