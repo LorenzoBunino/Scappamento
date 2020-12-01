@@ -5,11 +5,6 @@ from scappamento.__about__ import __version__
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-with open('requirements.txt') as f:
-    requirements = f.readlines()
-
-
-# TODO: read requirements from file (skip setuptools etc.)
 
 setuptools.setup(
     name='scappamento',
@@ -32,6 +27,15 @@ setuptools.setup(
         "Operating System :: Microsoft :: Windows",  # TODO: fix path handling and
                                                      #  change "Microsoft :: Windows" to "OS Independent"
     ],
-    install_requires=requirements,
+    install_requires=[
+        'pandas~=1.1.2',
+        'xlrd~=1.2.0',
+        'xlutils~=2.0.0',
+        'requests~=2.24.0',
+        'selenium~=3.141.0',
+        'beautifulsoup4~=4.9.3',
+        'mysql-connector-python~=8.0.11',
+        'chromedriver_binary>=86.0.4240.22.0'
+    ],
     python_requires='>=3.6'
 )
