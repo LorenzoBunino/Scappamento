@@ -16,7 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 
-from .supplier import Supplier, ScappamentoError, browser_login
+from .supplier import Supplier, ScappamentoError
 
 
 supplier_name = 'MEPA'
@@ -86,7 +86,7 @@ def update():
 
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
-    options.add_argument('--window-size=1920,1080')
+    options.add_argument('--window-size=3840,2160')
     with webdriver.Chrome(options=options) as driver:
         # Login
         print('ChromeDriver path:', chromedriver_path)
