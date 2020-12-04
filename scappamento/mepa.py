@@ -108,7 +108,7 @@ def update():
 
         # driver.get(sostituzione_url)
         # catalogo_butt = driver.find_element_by_css_selector(catalogo_css)
-        catalogo_butt = WebDriverWait(driver, 5).until(ec.presence_of_element_located((By.CSS_SELECTOR, catalogo_css)))
+        catalogo_butt = WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.CSS_SELECTOR, catalogo_css)))
         catalogo_butt.click()
 
         # time.sleep(5)
