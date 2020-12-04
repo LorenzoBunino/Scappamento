@@ -2,6 +2,7 @@
 # scappamento
 [![License](https://img.shields.io/github/license/LorenzoBunino/scappamento)]()
 [![Build Status](https://travis-ci.com/LorenzoBunino/scappamento.svg?branch=master)](https://travis-ci.com/LorenzoBunino/scappamento)
+[![Coverage Status](https://coveralls.io/repos/github/LorenzoBunino/scappamento/badge.svg?branch=master)](https://coveralls.io/github/LorenzoBunino/scappamento?branch=master)
 [![PyPI version](https://badge.fury.io/py/scappamento.svg)](https://badge.fury.io/py/scappamento)
 #### B2B automation for music stores
 
