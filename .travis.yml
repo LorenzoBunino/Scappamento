@@ -11,7 +11,7 @@ notifications:
 before_deploy:
 - echo "${SSH_DEPLOY_PUBLIC_KEY}" >> $HOME/.ssh/known_hosts
 - eval "$(ssh-agent)"
-- ssh-add < (echo "${SSH_DEPLOY_PRIVATE_KEY}" | base64 --decode)
+- echo "${SSH_DEPLOY_PRIVATE_KEY}" | base64 --decode | ssh-add -
 deploy:
   provider: pypi
   username: __token__
