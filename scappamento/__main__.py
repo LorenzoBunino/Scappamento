@@ -10,11 +10,28 @@ from scappamento import frenexport
 from scappamento import suonostore
 from scappamento import mepa
 from scappamento import mogar
+from scappamento import daddario
 
 
 def main():
-    suppliers_list = ['yamaha', 'fender', 'frenexport', 'suonostore', 'mepa', 'mogar']
-    updaters_list = [yamaha.update, fender.update, frenexport.update, suonostore.update, mepa.update, mogar.update]
+    suppliers_list = [
+        'yamaha',
+        'fender',
+        'frenexport',
+        'suonostore',
+        'mepa',
+        'mogar',
+        'daddario'
+    ]
+    updaters_list = [
+        yamaha.update,
+        fender.update,
+        frenexport.update,
+        suonostore.update,
+        mepa.update,
+        mogar.update,
+        daddario.update
+    ]
     suppliers_help = 'the supplier to be updated'
 
     parser = argparse.ArgumentParser(description='Automate B2B provisioning.')
