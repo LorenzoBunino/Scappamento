@@ -9,14 +9,13 @@
 **scappamento** is a Python tool that acts as an intermediary between suppliers and ERP software.
 
 Supported suppliers / platforms:
-- [x] Yamaha
-- [x] Fender
-- [x] Frenexport
-- [ ] Proel (WIP)
-- [x] Suonostore
-- [ ] MusicPool (WIP, broken)
-- [x] acquistinretepa
-- [x] Mogar (Encoding conversion)
+* Yamaha
+* Fender
+* Frenexport
+* Suonostore
+* acquistinretepa
+* Mogar
+* D'Addario
 
 :broccoli:
 
