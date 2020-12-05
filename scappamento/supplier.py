@@ -7,7 +7,7 @@ import configparser
 import chromedriver_binary
 from selenium import webdriver
 
-default_config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento_config'
+default_config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento_config\\'
 default_config_name = 'scappamento.ini'
 
 
