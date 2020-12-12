@@ -2,6 +2,7 @@
 # Download product list
 # Perform file conversion
 # Maybe cleanup
+# Save as CSV
 
 import os.path
 
