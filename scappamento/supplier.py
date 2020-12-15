@@ -6,6 +6,7 @@ import configparser
 
 import chromedriver_binary
 from selenium import webdriver
+from xlwt import Workbook
 
 default_config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento_config\\'
 default_config_name = 'scappamento.ini'
@@ -94,3 +95,23 @@ def browser_login(login_url, user_css_selector, user, password_css_selector, pas
         login_butt.click()
 
         return driver.get_cookies()
+
+
+def convert_excel(i_filepath, o_filepath):
+    with open(i_filepath, "r", encoding="utf-16") as f:
+        data = f.readlines()
+
+    # Creating a workbook object
+    xl_doc = Workbook()
+    # Adding a sheet to the workbook object
+    sheet = xl_doc.add_sheet("Sheet1", cell_overwrite_ok=True)
+    # Iterating and saving the data to sheet
+    for i, row in enumerate(data):
+        # Two things are done here
+        # Removing the '\n' which comes while reading the file using io.open
+        # Getting the values after splitting using '\t'
+        for j, val in enumerate(row.replace('\n', '').split('\t')):
+            sheet.write(i, j, val)
+
+    # Saving the file as an excel file
+    xl_doc.save(o_filepath)
