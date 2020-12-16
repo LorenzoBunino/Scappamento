@@ -28,15 +28,15 @@ setuptools.setup(
                                                      #  change "Microsoft :: Windows" to "OS Independent"
     ],
     install_requires=[
-        'pandas~=1.1.2',
-        'xlrd~=1.2.0',
-        'xlutils~=2.0.0',
+        'pandas>=1.1.2',
+        'xlrd>=1.2.0',
+        'xlutils>=2.0.0',
         'requests~=2.24.0',
         'selenium~=3.141.0',
         'beautifulsoup4~=4.9.3',
         'mysql-connector-python~=8.0.11',
         'chromedriver_binary>=86.0.4240.22.0',
-        'xlwt~=1.3.0'
+        'xlwt>=1.3.0'
     ],
     python_requires='>=3.6'
 )
