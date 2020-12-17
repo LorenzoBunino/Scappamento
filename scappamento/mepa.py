@@ -16,7 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 
-from .supplier import Supplier, ScappamentoError
+from .supplier import Supplier, ScappamentoError, excel_resave
 
 
 supplier_name = 'MEPA'
@@ -59,6 +59,9 @@ def update():
      catalogo_css,
      sostituzione_css] = mepa.val_list
 
+    # Clean file from errors
+    excel_resave(readypro_excel_filename)
+
     # Copy data from generated spreadsheet to downloaded to-edit one
     readypro_xls = open_workbook(readypro_excel_filename)
     mepa_xls_model = open_workbook(mepa_excel_filename, formatting_info=True)
@@ -68,6 +71,7 @@ def update():
     mepa_sheet = mepa_xls_new.get_sheet(1)
     readypro_sheet = readypro_xls.sheet_by_index(0)  # get_sheet() throws an error
 
+    # TODO: avoid empty rows when an invalid entry is skipped
     for i in range(1, readypro_sheet.nrows):  # rows (skip header)
         for j in range(0, 20):  # cols
             marca = False
