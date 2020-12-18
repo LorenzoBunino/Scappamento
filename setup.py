@@ -37,7 +37,7 @@ setuptools.setup(
         'mysql-connector-python~=8.0.11',
         'chromedriver_binary>=86.0.4240.22.0',
         'xlwt>=1.3.0',
-        'pywin32'
+        'pywin32>=300'
     ],
     python_requires='>=3.6'
 )
