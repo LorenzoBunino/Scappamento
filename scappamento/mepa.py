@@ -10,13 +10,14 @@ import time
 
 from xlrd import open_workbook
 from xlutils.copy import copy
+from xlutils.save import save
 import chromedriver_binary
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 
-from .supplier import Supplier, ScappamentoError, excel_resave
+from .supplier import Supplier, ScappamentoError
 
 
 supplier_name = 'MEPA'
@@ -59,11 +60,13 @@ def update():
      catalogo_css,
      sostituzione_css] = mepa.val_list
 
-    # Clean file from errors
-    excel_resave(readypro_excel_filename)
+    # TODO: add some info prints
+    # Open and re-save excel file to fix mildly malformed files
+    readypro_xls = open_workbook(readypro_excel_filename)
+    save(readypro_xls, readypro_excel_filename+'.f')
 
     # Copy data from generated spreadsheet to downloaded to-edit one
-    readypro_xls = open_workbook(readypro_excel_filename)
+    readypro_xls = open_workbook(readypro_excel_filename+'.f')
     mepa_xls_model = open_workbook(mepa_excel_filename, formatting_info=True)
 
     mepa_xls_new = copy(mepa_xls_model)
@@ -82,9 +85,6 @@ def update():
                 mepa_sheet.write(i, j, readypro_sheet.cell_value(i, j+1))  # offset read, column 0 is empty
 
     mepa_xls_new.save(os.path.join(target_path, new_excel_filename))
-
-    # cookies = browser_login(login_url, user_css, user, password_css, password, login_butt_css,
-    #                         login_popup_css)
 
     chromedriver_path = chromedriver_binary.chromedriver_filename
 
@@ -108,53 +108,19 @@ def update():
         login_butt = driver.find_element_by_css_selector(login_butt_css)
         login_butt.click()
 
-        # time.sleep(15)
-
-        # driver.get(sostituzione_url)
-        # catalogo_butt = driver.find_element_by_css_selector(catalogo_css)
         catalogo_butt = WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.CSS_SELECTOR, catalogo_css)))
         catalogo_butt.click()
 
-        # time.sleep(5)
-
-        # sost_butt = driver.find_element_by_css_selector(sostituzione_css)
         sost_butt = WebDriverWait(driver, 5).until(ec.presence_of_element_located((By.CSS_SELECTOR, sostituzione_css)))
         sost_butt.click()
 
-        # file_input = driver.find_element_by_css_selector(file_input_css)
         file_input = WebDriverWait(driver, 10).until(ec.presence_of_element_located((By.CSS_SELECTOR, file_input_css)))
         file_input.send_keys(os.path.join(target_path, new_excel_filename))
 
-        # time.sleep(5)
-
-        # upload_butt = driver.find_element_by_css_selector(upload_butt_css)
         upload_butt = WebDriverWait(driver, 5).until(ec.presence_of_element_located((By.CSS_SELECTOR, upload_butt_css)))
         upload_butt.click()
 
         time.sleep(10)  # dirty, switch with something that checks portal output message
-
-        # print(driver.page_source)
-
-        # os.system('pause')
-
-        # print('kek')
-
-    # TODO: Travis notes https://travis-ci.org/
-    #  https://www.google.com/search?q=python+travis+ci&oq=python+travis+ci&aqs=chrome..69i57j69i60l2j0i22i30l4.3591j0j1&sourceid=chrome&ie=UTF-8
-    #  https://docs.travis-ci.com/user/languages/python/
-    #  https://docs.travis-ci.com/user/tutorial/
-    #  https://docs.travis-ci.com/user/customizing-the-build/
-    #  https://blog.travis-ci.com/2019-08-07-extensive-python-testing-on-travis-ci
-    #  https://travis-ci.com/signup
-    #  https://docs.travis-ci.com/user/deployment/pypi/
-    #  https://realpython.com/python-testing/
-
-    # TODO: (old) Config default location (_common) is done
-    #  Handling missing config > creating default config might necessitate for
-    #   <key_list> to be public in all modules as well
-    #  -> Loop over modules (maybe the ones in exposed command list?)
-    #  treat module as class? call update() on module name, idk
-    #  write first test
 
 
 if __name__ == '__main__':
