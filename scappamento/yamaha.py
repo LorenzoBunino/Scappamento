@@ -4,12 +4,13 @@
 # Download Excel product list (no disk)
 # Clean Excel table,convert to CSV, save
 
-import os.path
+import io
 
 from requests import session
+import olefile
 import pandas as pd
 
-from .supplier import Supplier, ScappamentoError, excel_resave
+from .supplier import Supplier, ScappamentoError
 
 
 supplier_name = 'Yamaha'
@@ -23,7 +24,7 @@ def update():
                 'form_action_url',
                 'xls_url',
                 'logout_url',
-                'xls_filename',
+                # 'xls_filename',
                 'csv_filename',
                 'target_path',
                 'expected_columns_len']
@@ -37,7 +38,7 @@ def update():
      form_action_url,
      xls_url,
      logout_url,
-     xls_filename,
+     # xls_filename,
      csv_filename,
      target_path,
      expected_columns_len] = yamaha.val_list
@@ -56,19 +57,21 @@ def update():
         # Logout
         s.get(logout_url)
 
-    # write to file (mandatory step, it seems), resave with MS Excel to clean file format errors
-    xls_filepath = os.path.join(target_path, xls_filename)
-    with open(xls_filepath, 'wb') as f:
-        f.write(r.content)
-    excel_resave(xls_filepath)
+    xls_file = io.BytesIO(r.content)
+    ole = olefile.OleFileIO(xls_file)
+    if not ole.exists('Workbook'):
+        raise ScappamentoError("Fatal error: malformed xls file")
 
-    list_xls = pd.read_excel(xls_filepath, header=None)
+    wb = ole.openstream('Workbook')
+    list_xls = pd.read_excel(wb, engine='xlrd', header=None)
+    print(list_xls.head())
 
     # Check file content format
     if len(list_xls.columns) != int(expected_columns_len):  # check for usual header size
         raise ScappamentoError("Unexpected datasheet header size")
 
     # Edit, convert & save, delete original file
+    print('Saving...')
     list_xls.drop([0, 1, 2, 3, 4, 5], inplace=True)
     list_xls.to_csv(target_path + csv_filename, sep=';', header=None, index=False, encoding='utf-8')
 
