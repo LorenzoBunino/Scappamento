@@ -6,7 +6,6 @@ import configparser
 
 import chromedriver_binary
 from selenium import webdriver
-import win32com.client as win32
 
 default_config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento_config\\'
 default_config_name = 'scappamento.ini'
@@ -96,46 +95,3 @@ def browser_login(login_url, user_css_selector, user, password_css_selector, pas
 
         return driver.get_cookies()
 
-
-# Resave an excel file with MS Excel, to correct file issues (overwrites)
-def excel_resave(i_filepath):
-    excel_app = win32.Dispatch('Excel.Application')
-    wb = excel_app.Workbooks.open(i_filepath)
-    excel_app.DisplayAlerts = False  # do not show any alert when closing the excel
-    wb.Save()
-    excel_app.quit()
-
-# def convert_excel(i_filepath, o_filepath):
-#     with open(i_filepath, "r", encoding="cp1252") as f:
-#         data = f.readlines()
-#
-#     # Creating a workbook object
-#     xl_doc = Workbook()
-#     # Adding a sheet to the workbook object
-#     sheet = xl_doc.add_sheet("Sheet1", cell_overwrite_ok=True)
-#     # Iterating and saving the data to sheet
-#     for i, row in enumerate(data):
-#         # Two things are done here
-#         # Removing the '\n' which comes while reading the file using io.open
-#         # Getting the values after splitting using '\t'
-#         for j, val in enumerate(row.replace('\n', '').split('\t')):
-#             sheet.write(i, j, val)
-#
-#     # Saving the file as an excel file
-#     xl_doc.save(o_filepath)
-#     # TODO: read on xl_doc.save(), create a convert_excel() version which uses TextIO
-#
-#
-# def convert_excel_stream(i_stream):
-#     data = io.StringIO(i_stream).readlines()
-#
-#     xl_doc = Workbook()
-#     sheet = xl_doc.add_sheet("Sheet1", cell_overwrite_ok=True)
-#     for i, row in enumerate(data):
-#         for j, val in enumerate(row.replace('\n', '').split('\t')):
-#             sheet.write(i, j, val)
-#
-#     o_stream = io.StringIO()
-#     xl_doc.save(o_stream)
-#
-#     return o_stream
