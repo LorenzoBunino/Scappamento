@@ -58,9 +58,8 @@ def update():
 
     list_xls = pd.read_excel(r.content, header=None)
 
+    print('Saving...')
     list_xls.to_csv(os.path.join(target_path, csv_filename), sep=';', header=None, index=False)
-
-    print('testing-fe9847n3')
 
 
 if __name__ == '__main__':
