@@ -29,7 +29,7 @@ setuptools.setup(
     ],
     install_requires=[
         'pandas>=1.1.2',
-        'xlrd>=1.2.0',
+        'xlrd>=2.0.1',
         'xlutils>=2.0.0',
         'requests~=2.24.0',
         'selenium~=3.141.0',
@@ -37,7 +37,7 @@ setuptools.setup(
         'mysql-connector-python~=8.0.11',
         'chromedriver_binary>=86.0.4240.22.0',
         'xlwt>=1.3.0',
-        'pywin32>=300'
+        'olefile>=0.46'
     ],
     python_requires='>=3.6'
 )
