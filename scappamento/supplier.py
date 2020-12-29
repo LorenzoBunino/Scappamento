@@ -40,6 +40,16 @@ class ScappamentoError(Exception):
     pass
 
 
+def fix_illegal_inch(field):
+    match = False
+    for i in range(len(field) - 1, -1, -1):  # for each char in field, inverted, greedy [0-9]" match
+        if i and field[i] == '"' and field[i - 1].isdigit():
+            match = True
+            return field[0:i] + '″' + field[i + 1:len(field)], match  # greedy
+        else:
+            return field, match
+
+
 # scan line by double-quotes pairs
 # look for separator characters inside quote pairs
 # replace separator with sub
@@ -48,11 +58,25 @@ def fix_illegal_sep_quotes(line, sep, sep_replacement):
     is_modified = False
     in_quotes = False
     new_line = ''
-    for char in line:
+    field_start = 0
+    for count, char in enumerate(line):
         if char == '"':
             in_quotes = not in_quotes  # toggle
-            new_line = new_line + char
-            continue
+
+            if in_quotes:
+                field_start = count+1
+
+            if not in_quotes and line[count+1] != sep:  # the "closing" double quote is doing something else
+                in_quotes = True  # reset to correct value
+                field = line[field_start:count+1]
+                new_field, match = fix_illegal_inch(field)
+
+                new_line = new_line + char
+                new_line = new_line.replace(field, new_field)
+                continue
+            else:
+                new_line = new_line + char
+                continue
 
         if in_quotes and char == sep:
             new_line = new_line + sep_replacement

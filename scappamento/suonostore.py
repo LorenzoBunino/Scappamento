@@ -5,7 +5,7 @@
 
 from requests import Session
 
-from .supplier import Supplier, ScappamentoError, fix_illegal_sep_quotes, switch_sep
+from .supplier import Supplier, ScappamentoError, fix_illegal_sep_quotes, switch_sep, fix_illegal_inch
 
 
 supplier_name = 'Suonostore'
@@ -61,9 +61,10 @@ def update():
 
         temp_line = fix_timestamp(line)
         temp_line = fix_decimals(temp_line)
+        temp_line = temp_line.replace('", ', '"; ')  # hack
         temp_line = switch_sep(temp_line, ',', sep)
 
-        [temp_line, sep_modified] = fix_illegal_sep_quotes(temp_line, sep, ',')  # fix illegal separators
+        temp_line, sep_modified = fix_illegal_sep_quotes(temp_line, sep, ',')  # fix illegal separators
 
         field_count = 0
         temp_cod_art = ''
@@ -77,12 +78,8 @@ def update():
 
             if field.count('"') % 2:  # if double quotes parity check fails
                 found_problematic_field = True
-                match = False
-                for i in range(len(field)-1, -1, -1):  # for each char in field, inverted, greedy [0-9]" match
-                    if i and field[i] == '"' and field[i-1].isdigit():
-                        rebuilt_temp_line = rebuilt_temp_line + sep + field[0:i] + '″' + field[i+1:len(field)]
-                        match = True
-                        break  # greedy
+                [temp_field, match] = fix_illegal_inch(field)
+                rebuilt_temp_line = rebuilt_temp_line + sep + temp_field
 
                 if not match:  # problematic fields are copied as-is for now
                     print('⚠ [ Row ', line_count, '][', temp_cod_art, ']', 'Uh oh: field ', field_count + 1)
