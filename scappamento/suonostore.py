@@ -5,7 +5,7 @@
 
 from requests import Session
 
-from .supplier import Supplier, ScappamentoError, fix_illegal_sep_quotes, switch_sep, fix_illegal_inch
+from .supplier import Supplier, fix_illegal_sep_quotes, switch_sep, fix_illegal_inch  # , ScappamentoError
 
 
 supplier_name = 'Suonostore'

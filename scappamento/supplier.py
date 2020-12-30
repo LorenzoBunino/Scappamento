@@ -68,10 +68,12 @@ def fix_illegal_sep_quotes(line, sep, sep_replacement):
 
             if not in_quotes and line[count+1] != sep:  # the "closing" double quote is doing something else
                 in_quotes = True  # reset to correct value
-                field = line[field_start:count+1]
-                new_field, match = fix_illegal_inch(field)
 
                 new_line = new_line + char
+
+                field = new_line[field_start:count+1]
+                new_field, match = fix_illegal_inch(field)
+
                 new_line = new_line.replace(field, new_field)
                 continue
             else:
@@ -118,4 +120,3 @@ def browser_login(login_url, user_css_selector, user, password_css_selector, pas
         login_butt.click()
 
         return driver.get_cookies()
-

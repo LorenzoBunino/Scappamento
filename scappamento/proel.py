@@ -3,7 +3,7 @@
 
 import pandas as pd
 
-from .supplier import Supplier, ScappamentoError
+from .supplier import Supplier  # , ScappamentoError
 
 
 supplier_name = 'Proel'
@@ -24,6 +24,9 @@ def update():
     headers_map = {'Product_name': 'PRODUCT_CODE',
                    'Cat_1': 'CAT_1',
                    'Lead Time': 'LEAD_TIME'}
+
+    if headers_map:
+        pass
 
     # note: file 2 is the "master" one
     csv_1 = pd.read_csv(csv_filename_1, sep=';', encoding='ISO-8859-1')

@@ -13,7 +13,7 @@ from requests import session
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from .supplier import Supplier, ScappamentoError
+from .supplier import Supplier  # , ScappamentoError
 
 
 supplier_name = 'MusicPool'
