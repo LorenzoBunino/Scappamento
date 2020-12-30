@@ -1,9 +1,11 @@
 # --- Hoshino ---
 # Download product list
+# Delete empty rows
 # Save as CSV
 
+import os.path
+
 from requests import Session
-from bs4 import BeautifulSoup
 import pandas as pd
 
 from .supplier import Supplier  # , ScappamentoError
@@ -18,7 +20,10 @@ def update():
         'user',
         'password',
         'login_url',
-        'form_action_url'
+        'form_action_url',
+        'report_url',
+        'target_path',
+        'csv_filename'
     ]
     hoshino = Supplier(supplier_name, key_list)
 
@@ -27,29 +32,33 @@ def update():
     [user,
      password,
      login_url,
-     form_action_url] = hoshino.val_list
+     form_action_url,
+     report_url,
+     target_path,
+     csv_filename] = hoshino.val_list
 
     with Session() as s:
         # Login
         print('Logging in...')
         s.get(login_url)
         payload = {'email': user, 'password': password}
-        r = s.post(form_action_url, data=payload)
+        s.post(form_action_url, data=payload)
 
-        print(r.text)
+        # Download
+        print('Downloading...')
+        r = s.get(report_url)
 
-        # print('Downloading...')
-        # daddario_soup = BeautifulSoup(r.text, 'html.parser')
-        # token_input = daddario_soup.select_one(token_input_css)
-        # payload = {token_input['name']: token_input['value']}
-        # r = s.post(dl_form_action_url, data=payload)
+    # Cleanup
+    print('Cleaning up...')
+    r_clean = r.text.replace('Menil percussions', 'Meinl percussions')
 
-    # list_xls = pd.read_excel(r.content, header=None)
-    #
-    # list_xls.to_csv(os.path.join(target_path, csv_filename), sep=';', header=None, index=False)
+    report = pd.read_json(r_clean)
+    report.dropna(inplace=True)
 
-    print('testing-tv5w8o7c')
+    print('Saving...')
+    csv_filepath = os.path.join(target_path, csv_filename)
+    report.to_csv(csv_filepath, sep=';')
 
 
 if __name__ == '__main__':
-    update()
+    pass  # will be test
