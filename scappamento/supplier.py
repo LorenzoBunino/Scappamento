@@ -120,4 +120,3 @@ def browser_login(login_url, user_css_selector, user, password_css_selector, pas
         login_butt.click()
 
         return driver.get_cookies()
-
