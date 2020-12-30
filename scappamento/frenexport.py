@@ -7,7 +7,7 @@
 import mysql.connector as msq
 import pandas
 
-from .supplier import Supplier, ScappamentoError
+from .supplier import Supplier  # , ScappamentoError
 
 
 supplier_name = 'Frenexport'
