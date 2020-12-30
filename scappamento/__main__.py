@@ -11,7 +11,7 @@ from scappamento import suonostore
 from scappamento import mepa
 from scappamento import mogar
 # from scappamento import daddario
-# from scappamento import hoshino
+from scappamento import hoshino
 
 
 def main():
@@ -23,7 +23,7 @@ def main():
         'mepa',
         'mogar',
         # 'daddario',
-        # 'hoshino'
+        'hoshino'
     ]
     updaters_list = [
         yamaha.update,
@@ -33,7 +33,7 @@ def main():
         mepa.update,
         mogar.update,
         # daddario.update,
-        # hoshino.update
+        hoshino.update
     ]
     suppliers_help = 'the supplier to be updated'
 
