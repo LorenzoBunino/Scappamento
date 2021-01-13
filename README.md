@@ -18,5 +18,3 @@ Supported suppliers / platforms:
 * D'Addario
 
 :broccoli:
-
-New commit labels: `fix`, `feat`, `test`, `refactor`, `perf`
