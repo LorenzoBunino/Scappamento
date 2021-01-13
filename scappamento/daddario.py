@@ -56,7 +56,7 @@ def update():
         payload = {token_input['name']: token_input['value']}
         r = s.post(dl_form_action_url, data=payload)
 
-    list_xls = pd.read_excel(r.content, header=None)
+    list_xls = pd.read_excel(r.content, header=None, engine='openpyxl')
 
     print('Saving...')
     list_xls.to_csv(os.path.join(target_path, csv_filename), sep=';', header=None, index=False)

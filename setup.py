@@ -31,6 +31,7 @@ setuptools.setup(
         'pandas>=1.1.2',
         'xlrd>=2.0.1',
         'xlutils>=2.0.0',
+        'openpyxl>=3.0.5',
         'requests~=2.24.0',
         'selenium~=3.141.0',
         'beautifulsoup4~=4.9.3',
