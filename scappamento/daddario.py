@@ -56,10 +56,82 @@ def update():
         payload = {token_input['name']: token_input['value']}
         r = s.post(dl_form_action_url, data=payload)
 
-    list_xls = pd.read_excel(r.content, header=None, engine='openpyxl')
+    print('Reading data...')
+    list_xlsx = pd.read_excel(r.content, engine='openpyxl')
+
+    csv_cols = [
+        'Codice Articolo',
+        'Nome Descrittivo',
+        'Categoria',
+        'Sottocategoria 1',
+        'Sottocategoria 2',
+        'Nome Produttore',
+        'Codice articolo produttore',
+        'Prezzo di listino ufficiale',
+        'Prezzo di acquisto da fornitore',
+        'Sconto',
+        'Quantità',
+        'Peso (kg)',
+        'Volume (m3)',
+        'Codice a barre',
+        'Foto',
+        'Tabella personalizzata 2',
+        'Tabella personalizzata 3',
+        'Campo libero 1',
+        'Campo libero 2',
+        'Campo libero 3',
+        'Descrizione estesa',
+        'Descrizione estesa 2'
+    ]
+
+    xlsx_cols = [
+        'Marchio',
+        'Articolo n°',
+        'CPU',
+        'Nome prodotto',
+        'Prezzo al dettaglio',
+        'Prezzo cliente',
+        'Data di introduzione articolo',
+        'Qtà ordine minimo',
+        'Quantità scatole',
+        'Quantità pacchi',
+        'Tempi di consegna',
+        'Quantità scatoloni',
+        'Quantità pacchi',
+        'Paese di origine',
+        'Lunghezza articolo',
+        'Larghezza articolo',
+        'Altezza articolo',
+        'Peso articolo',
+        'Lunghezza scatola',
+        'Larghezza scatola',
+        'Altezza scatola',
+        'Peso scatola',
+        'Lunghezza pacco',
+        'Larghezza pacco',
+        'Altezza pacco',
+        'Peso pacco',
+        'USP 1',
+        'USP 2',
+        'USP 3',
+        'USP 4',
+        'USP 5',
+        'USP 6',
+        'Immagini prodotto'
+    ]
+
+    # Cleanup 1
+    mask = (list_xlsx[xlsx_cols[0]] == 'Not Applicable') & (list_xlsx[xlsx_cols[3]].str.contains('D\'Addario '))
+    list_xlsx.loc[mask, xlsx_cols[3]] = list_xlsx.loc[mask, xlsx_cols[3]].str.replace('D\'Addario ', '', regex=True)
+    # list_xlsx[mask][xlsx_cols[0]].replace({'Not Applicable': 'D\'Addario'}, inplace=True)
+    list_xlsx.loc[mask, xlsx_cols[0]] = 'D\'Addario'
+
+    list_csv = pd.DataFrame()
+    list_csv[csv_cols[0]] = list_xlsx[xlsx_cols[1]]
+    # list_csv[csv_cols[1]] =
 
     print('Saving...')
-    list_xls.to_csv(os.path.join(target_path, csv_filename), sep=';', header=None, index=False)
+    list_xlsx.to_csv(os.path.join(target_path, csv_filename), sep=';', header=None, index=False)
 
 
 if __name__ == '__main__':
