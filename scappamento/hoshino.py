@@ -50,10 +50,12 @@ def update():
 
     # Cleanup
     print('Cleaning up...')
-    r_clean = r.text.replace('Menil percussions', 'Meinl percussions')
+    r_clean = r.text.replace('Menil percussions', 'Meinl percussions')  # fix typos
 
     report = pd.read_json(r_clean)
-    report.dropna(inplace=True)
+    report.dropna(inplace=True)  # purge empty rows
+    mask = report['Brand'].str.contains('Meinl') | report['SGC'].str.contains('Meinl')
+    report.drop(report[mask].index, inplace=True)  # filter meinl
 
     print('Saving...')
     csv_filepath = os.path.join(target_path, csv_filename)
