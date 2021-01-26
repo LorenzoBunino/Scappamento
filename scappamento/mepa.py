@@ -20,6 +20,10 @@ from selenium.webdriver.common.by import By
 from .supplier import Supplier  # , ScappamentoError
 
 
+def prepare_image_zips():
+    pass
+
+
 supplier_name = 'MEPA'
 
 
@@ -62,10 +66,12 @@ def update():
 
     # TODO: add some info prints
     # Open and re-save excel file to fix mildly malformed files
+    print('Recovering files...')
     readypro_xls = open_workbook(readypro_excel_filename)
     save(readypro_xls, readypro_excel_filename+'.f')
 
     # Copy data from generated spreadsheet to downloaded to-edit one
+    print('Processing data...')
     readypro_xls = open_workbook(readypro_excel_filename+'.f')
     mepa_xls_model = open_workbook(mepa_excel_filename, formatting_info=True)
 
@@ -73,6 +79,8 @@ def update():
 
     mepa_sheet = mepa_xls_new.get_sheet(1)
     readypro_sheet = readypro_xls.sheet_by_index(0)  # get_sheet() throws an error
+
+    id_images = dict(zip(readypro_sheet.col_values(1)[1:], readypro_sheet.col_values(21)[1:]))
 
     # TODO: avoid empty rows when an invalid entry is skipped
     for i in range(1, readypro_sheet.nrows):  # rows (skip header)
@@ -84,6 +92,7 @@ def update():
             if marca and readypro_sheet.cell_value(i, 1):  # CodArt Produttore = campo 1
                 mepa_sheet.write(i, j, readypro_sheet.cell_value(i, j+1))  # offset read, column 0 is empty
 
+    print('Saving...')
     mepa_xls_new.save(os.path.join(target_path, new_excel_filename))
 
     chromedriver_path = chromedriver_binary.chromedriver_filename
@@ -94,6 +103,7 @@ def update():
     with webdriver.Chrome(options=options) as driver:
         # Login
         print('ChromeDriver path:', chromedriver_path)
+        print('Logging in...')
         driver.get(login_url)
 
         pop_up_butt = driver.find_element_by_css_selector(login_popup_css)
@@ -117,6 +127,7 @@ def update():
         file_input = WebDriverWait(driver, 10).until(ec.presence_of_element_located((By.CSS_SELECTOR, file_input_css)))
         file_input.send_keys(os.path.join(target_path, new_excel_filename))
 
+        print('Uploading catalog...')
         upload_butt = WebDriverWait(driver, 5).until(ec.presence_of_element_located((By.CSS_SELECTOR, upload_butt_css)))
         upload_butt.click()
 
