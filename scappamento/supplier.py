@@ -103,7 +103,6 @@ def browser_login(login_url, user_css_selector, user, password_css_selector, pas
     options.add_argument('--headless')
     with webdriver.Chrome(options=options) as driver:
         # Login
-        print('ChromeDriver path:', chromedriver_path)
         driver.get(login_url)
 
         if pop_css_selector:
