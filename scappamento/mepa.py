@@ -11,7 +11,7 @@ import time
 from xlrd import open_workbook
 from xlutils.copy import copy
 from xlutils.save import save
-import chromedriver_binary
+import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -86,14 +86,13 @@ def update():
 
     mepa_xls_new.save(os.path.join(target_path, new_excel_filename))
 
-    chromedriver_path = chromedriver_binary.chromedriver_filename
+    chromedriver_autoinstaller.install()
 
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--window-size=3840,2160')
     with webdriver.Chrome(options=options) as driver:
         # Login
-        print('ChromeDriver path:', chromedriver_path)
         driver.get(login_url)
 
         pop_up_butt = driver.find_element_by_css_selector(login_popup_css)
