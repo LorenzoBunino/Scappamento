@@ -4,7 +4,7 @@
 
 import configparser
 
-import chromedriver_binary
+import chromedriver_autoinstaller
 from selenium import webdriver
 
 default_config_path = 'C:\\Ready\\ReadyPro\\Archivi\\scappamento_config\\'
@@ -97,7 +97,7 @@ def switch_sep(line, sep_old, sep_new):
 # login into AJAX websites
 def browser_login(login_url, user_css_selector, user, password_css_selector, password, butt_css_selector,
                   pop_css_selector=None):
-    chromedriver_path = chromedriver_binary.chromedriver_filename
+    chromedriver_autoinstaller.install()
 
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
