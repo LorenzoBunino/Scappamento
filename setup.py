@@ -35,7 +35,7 @@ setuptools.setup(
         'selenium~=3.141.0',
         'beautifulsoup4~=4.9.3',
         'mysql-connector-python~=8.0.11',
-        'chromedriver_binary>=86.0.4240.22.0',
+        'chromedriver-autoinstaller>=0.2.2',
         'xlwt>=1.3.0',
         'olefile>=0.46'
     ],

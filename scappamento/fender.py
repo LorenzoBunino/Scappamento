@@ -65,10 +65,10 @@ def update():
 
     # Convert to CSV and save
     # TODO: check header size and column names
-    inventory_list_xlsx = pd.read_excel(r_inventory.content, header=None)
+    inventory_list_xlsx = pd.read_excel(r_inventory.content, header=None, engine='openpyxl')
     inventory_list_xlsx.to_csv(target_path + csv_inventory_filename, sep=';', header=None, index=False)
 
-    specs_list_xlsx = pd.read_excel(r_specs.content, header=None)
+    specs_list_xlsx = pd.read_excel(r_specs.content, header=None, engine='openpyxl')
     specs_list_xlsx.to_csv(target_path + csv_specs_filename, sep=';', header=None, index=False)
 
 
