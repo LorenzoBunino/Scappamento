@@ -13,15 +13,24 @@ before_deploy:
 - eval "$(ssh-agent)"
 - echo "${SSH_DEPLOY_PRIVATE_KEY}" | base64 --decode | ssh-add -
 deploy:
-  provider: pypi
+- provider: pypi
   username: __token__
   password:
     secure: GtIaf9BmJQ2MDJye5/kgfO85ZRuF5ArNmz+MwPBhHpYxxu6uHwzeE20LP9Cjr9y0RGt2jMcC7N4TwBd70fTITZg6LIgji651gSX4ALg4ypSDUdImDbjLTVUVE6ta8bvj8bHm2If2uhppjIRg3VE7F7wKobzei1hK6qP73h14GjHFjLUmKFagbveES09TJClRaqnOL6TFuKi/w3BbymUydBc0ditqc4p4o4BnaDFkk9ymBNQzLvFsR/xVbkFSoP7bEQQ7bGYSrTcYUB4RLChsxVdiOVmxWAg+9R744jI+BowQxwLmxcdIVv3si/W74TkHXbYCHYukz5VuI1qlt+PpY2pDIJ+GpgAMaOrLHrV0iNltNII8Mqw3hmomgUUdMVU8GqvbRbBZD6a8AYlKNj8a9g/b4/ZkOdkKZDW5VOtYwbUlsb7FaDLa0xtKIIA2XoApczNebSBWWXJZaSPk9/Wf98z/9+exXjj0VfqlBENQ18/O0I+hhzw51oa6ATVXSm+OapAx+oIEimPrL6oZslYDsplw5TmMmlo20ehzhDhRPwiF3Q2UIwIHvR02mys55Zu9RwF7FMKL5/RIrI0RZfQn7H57vh6TpmeL2jFYFpQs1wKi2kafGo9Zjv9anv4SLJ3PQSpwCT5PWDGFOFYb04HmhiRusfjU3LT4B96hJBbBdvY=
   on:
+    branch: master
     tags: true
   distributions: sdist bdist_wheel
+- provider: script
+  skip_cleanup: true
+  script: ssh HOSTNAME mkdir "C:\Ready\hehetest"
+  on:
+    branch: master
+    tags: true
 env:
   global:
-    - SSH_DEPLOY_PUBLIC_KEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCaKrsdzk2r9nLxqyq19NoIf4lcVZdtvPlrA6D6uG5UDSPIykaFsRtyJkzwqomFxHQlOrYfi8UjcSE9JtgHO/1vNzyLNDnDkJRUprR9mxpfWgJ1GezPH3cykfK1mwkDn+b7c9vmTs6zrHnVCq+U8OrciSOqkELrCNX/o2kF3jqtJkMlJ32yNE/eP4FkRGy835vPQ2VKmdxjqlIerv92pDv9UwLNBd5sLu7jFDMxnvE8cnON9TxqhAdT+UlRe61O2hX77eTVjtlbEsLu1wRxfT3QhMbmldsiyYTFBLpNxuXDHXZvkQXlyyPdAYbfxA5/GamCIrierM6uQGpHpcU85cT build@travis-ci.org"
+  - SSH_DEPLOY_PUBLIC_KEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCaKrsdzk2r9nLxqyq19NoIf4lcVZdtvPlrA6D6uG5UDSPIykaFsRtyJkzwqomFxHQlOrYfi8UjcSE9JtgHO/1vNzyLNDnDkJRUprR9mxpfWgJ1GezPH3cykfK1mwkDn+b7c9vmTs6zrHnVCq+U8OrciSOqkELrCNX/o2kF3jqtJkMlJ32yNE/eP4FkRGy835vPQ2VKmdxjqlIerv92pDv9UwLNBd5sLu7jFDMxnvE8cnON9TxqhAdT+UlRe61O2hX77eTVjtlbEsLu1wRxfT3QhMbmldsiyYTFBLpNxuXDHXZvkQXlyyPdAYbfxA5/GamCIrierM6uQGpHpcU85cT build@travis-ci.org
+"
+  - secure: iwg/Ia+RlqclR+owbX50E5EftRvlFjQ/czp+uJ88AbhVEIhDYg/8O0oZN9iwmm32yzfwZ7cwj9+MpxAqfqcxF8jRwZVN2IUW0HKzrzWGq/ydDW+w0sjqUU3jStee+el6pweG0Add+753y397kxhAByu4KU5yEHNUhQgEQ9gy9GiqxBZ/UarIIFa+bkjKaHTlhxbTrtSYhmfw3SZP1FJuFFbcldum146twa9vFcw9UcrEujvTkBA8M9lFyP4jhz0U1dgW1bhMK/5QAiPYtAjQbNX4phbYfbZnV7iWprbS/3y3TEPU7wL2v51VPVeHAEpGlhw4jsYMe4WNEvnE6CsRDWhIsyMGtVmO6pz1kOiFmElU7XNb4wFRY67xqwqjQMXpKhzhySO9F6+swQKA3n+O7wQ7VhxGgyaGeBSRFDmAAOW3jgivw/IgGnsVSdAKB6EEP6EFb5g7Nt6fCE+Ot6B3Yq3ddJ70vyfbujuAFV29/vYNpxKZdeuWS/fJrEmLuKAw2oykRq3ClMOC+CWbKFGDG+DaGHMVD2eZPdf0Bqb3yfp1AfW8bbe3swNATdL7bJA1/tghq4+Yj2I7UX4PbEam20Vv/pBfd2LPYXdlFiqFOF1ppHhavGxFE8uDS39dcxWYyzdzOTof1l51TJryGx/Tc3sbSxhRKR5OCXMQzVTXf78=
 after_success:
-  - coveralls
+- coveralls
