@@ -23,7 +23,7 @@ deploy:
   distributions: sdist bdist_wheel
 - provider: script
   skip_cleanup: true
-  script: ssh ${HOSTNAME} mkdir "C:\Ready\hehetest"
+  script: ssh "${HOSTNAME}" mkdir "C:\Ready\hehetest"
   on:
     branch: feature/ssh-deployment-test
 env:
