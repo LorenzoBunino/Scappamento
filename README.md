@@ -15,6 +15,6 @@ Supported suppliers / platforms:
 * Suonostore
 * acquistinretepa
 * Mogar
-* D'Addario
+* Hoshino Europe
 
 :broccoli:
