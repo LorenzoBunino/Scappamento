@@ -1,6 +1,7 @@
 # --- Hoshino ---
 # Download product list
 # Delete empty rows
+# Filter out Meinl rows
 # Save as CSV
 
 import os.path
@@ -50,14 +51,16 @@ def update():
 
     # Cleanup
     print('Cleaning up...')
-    r_clean = r.text.replace('Menil percussions', 'Meinl percussions')
+    r_clean = r.text.replace('Menil percussions', 'Meinl percussions')  # fix typos
 
     report = pd.read_json(r_clean)
-    report.dropna(inplace=True)
+    report.dropna(inplace=True)  # purge empty rows
+    mask = report['Brand'].str.contains('Meinl') | report['SGC'].str.contains('Meinl')
+    report.drop(report[mask].index, inplace=True)  # filter meinl
 
     print('Saving...')
     csv_filepath = os.path.join(target_path, csv_filename)
-    report.to_csv(csv_filepath, sep=';')
+    report.to_csv(csv_filepath, sep=';', index=False)
 
 
 if __name__ == '__main__':
