@@ -9,9 +9,9 @@ script: coverage run -m unittest discover -s tests
 notifications:
   email: false
 before_deploy:
-- echo "${SSH_DEPLOY_PUBLIC_KEY}" >> $HOME/.ssh/known_hosts
+- echo ${SSH_DEPLOY_PUBLIC_KEY} >> $HOME/.ssh/known_hosts
 - eval "$(ssh-agent)"
-- echo "${SSH_DEPLOY_PRIVATE_KEY}" | base64 --decode | ssh-add -
+- echo ${SSH_DEPLOY_PRIVATE_KEY} | base64 --decode | ssh-add -
 deploy:
 - provider: pypi
   username: __token__
