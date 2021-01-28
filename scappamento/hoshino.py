@@ -1,6 +1,7 @@
 # --- Hoshino ---
 # Download product list
 # Delete empty rows
+# Filter out Meinl rows
 # Save as CSV
 
 import os.path
@@ -59,7 +60,7 @@ def update():
 
     print('Saving...')
     csv_filepath = os.path.join(target_path, csv_filename)
-    report.to_csv(csv_filepath, sep=';')
+    report.to_csv(csv_filepath, sep=';', index=False)
 
 
 if __name__ == '__main__':
