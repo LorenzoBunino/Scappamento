@@ -16,6 +16,13 @@ from .supplier import Supplier  # , ScappamentoError
 supplier_name = 'D\'Addario'
 
 
+def strip_currency(series):
+    temp = series.str.replace(' €', '')
+    temp = temp.str.replace(',', '.')
+    # use unidecode if something like the issue below reappears
+    return temp.str.replace(u'\xa0', '')
+
+
 def update():
     # Config
     key_list = [
@@ -127,6 +134,11 @@ def update():
     list_xlsx.loc[mask, xlsx_cols[3]] = list_xlsx.loc[mask, xlsx_cols[3]].str.replace('D\'Addario ', '', regex=True)
     list_xlsx.loc[mask, xlsx_cols[0]] = 'D\'Addario'
 
+    # XLSX Cleanup 2, euro symbols
+    list_xlsx[xlsx_cols[4]] = strip_currency(list_xlsx[xlsx_cols[4]])
+    list_xlsx[xlsx_cols[5]] = strip_currency(list_xlsx[xlsx_cols[5]])
+
+    # CSV construction
     list_csv = pd.DataFrame()
     list_csv[csv_cols[0]] = list_xlsx[xlsx_cols[1]]
 
@@ -138,20 +150,13 @@ def update():
 
     list_csv[csv_cols[6]] = list_xlsx[xlsx_cols[1]]
 
-    list_csv[csv_cols[7]] = list_xlsx[xlsx_cols[4]].str.replace(' €', '')
-    list_csv[csv_cols[7]] = list_csv[csv_cols[7]].str.replace(',', '.')
-    # use unidecode if something like the issue below reappears
-    list_csv[csv_cols[7]] = list_csv[csv_cols[7]].str.replace(u'\xa0', '').astype(float)
-    list_csv[csv_cols[7]] = (list_csv[csv_cols[7]]*(1-int(iva)/100)).round(2)
+    list_csv[csv_cols[7]] = (list_xlsx[xlsx_cols[4]].astype(float)*(1-int(iva)/100)).round(2)
 
-    list_csv[csv_cols[8]] = list_xlsx[xlsx_cols[5]].str.replace(' €', '')
-    list_csv[csv_cols[8]] = list_csv[csv_cols[8]].str.replace(',', '.')
+    list_csv[csv_cols[8]] = list_xlsx[xlsx_cols[5]]
 
     list_csv[csv_cols[9]] = ''
 
     list_csv[csv_cols[10]] = ''  # TODO: clarify content
-
-    print('kek')
 
     # TODO: (probably) remove <Marchio> instances from <Nome Prodotto>
 
