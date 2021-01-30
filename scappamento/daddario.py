@@ -26,6 +26,7 @@ def update():
         'return_url',
         'token_input_css',
         'dl_form_action_url',
+        'IVA',
         'target_path',
         'csv_filename'
     ]
@@ -40,6 +41,7 @@ def update():
      return_url,
      token_input_css,
      dl_form_action_url,
+     iva,  # percentage value
      target_path,
      csv_filename] = daddario.val_list
 
@@ -54,7 +56,7 @@ def update():
         daddario_soup = BeautifulSoup(r.text, 'html.parser')
         token_input = daddario_soup.select_one(token_input_css)
         payload = {token_input['name']: token_input['value']}
-        r = s.post(dl_form_action_url, data=payload)
+        r = s.post(dl_form_action_url, data=payload)  # TODO: might need a check for error responses, picky cloudflare
 
     print('Reading data...')
     list_xlsx = pd.read_excel(r.content, engine='openpyxl')
@@ -120,15 +122,38 @@ def update():
         'Immagini prodotto'
     ]
 
-    # Cleanup 1
+    # XLSX Cleanup 1, list_xlsx.Marchio.unique() for the list
     mask = (list_xlsx[xlsx_cols[0]] == 'Not Applicable') & (list_xlsx[xlsx_cols[3]].str.contains('D\'Addario '))
     list_xlsx.loc[mask, xlsx_cols[3]] = list_xlsx.loc[mask, xlsx_cols[3]].str.replace('D\'Addario ', '', regex=True)
-    # list_xlsx[mask][xlsx_cols[0]].replace({'Not Applicable': 'D\'Addario'}, inplace=True)
     list_xlsx.loc[mask, xlsx_cols[0]] = 'D\'Addario'
 
     list_csv = pd.DataFrame()
     list_csv[csv_cols[0]] = list_xlsx[xlsx_cols[1]]
-    # list_csv[csv_cols[1]] =
+
+    list_csv[csv_cols[1]] = list_xlsx[[xlsx_cols[0], xlsx_cols[1], xlsx_cols[3]]].astype(str).agg(' '.join, axis=1)
+
+    list_csv[[csv_cols[2], csv_cols[3], csv_cols[4]]] = ''
+
+    list_csv[csv_cols[5]] = list_xlsx[xlsx_cols[0]]
+
+    list_csv[csv_cols[6]] = list_xlsx[xlsx_cols[1]]
+
+    list_csv[csv_cols[7]] = list_xlsx[xlsx_cols[4]].str.replace(' €', '')
+    list_csv[csv_cols[7]] = list_csv[csv_cols[7]].str.replace(',', '.')
+    # use unidecode if something like the issue below reappears
+    list_csv[csv_cols[7]] = list_csv[csv_cols[7]].str.replace(u'\xa0', '').astype(float)
+    list_csv[csv_cols[7]] = (list_csv[csv_cols[7]]*(1-int(iva)/100)).round(2)
+
+    list_csv[csv_cols[8]] = list_xlsx[xlsx_cols[5]].str.replace(' €', '')
+    list_csv[csv_cols[8]] = list_csv[csv_cols[8]].str.replace(',', '.')
+
+    list_csv[csv_cols[9]] = ''
+
+    list_csv[csv_cols[10]] = ''  # TODO: clarify content
+
+    print('kek')
+
+    # TODO: (probably) remove <Marchio> instances from <Nome Prodotto>
 
     print('Saving...')
     list_xlsx.to_csv(os.path.join(target_path, csv_filename), sep=';', header=None, index=False)
