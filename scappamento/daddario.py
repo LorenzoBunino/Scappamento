@@ -68,7 +68,7 @@ def update():
     print('Reading data...')
     list_xlsx = pd.read_excel(r.content, engine='openpyxl')
 
-    csv_cols = [
+    c_cols = [
         'Codice Articolo',
         'Nome Descrittivo',
         'Categoria',
@@ -93,7 +93,7 @@ def update():
         'Descrizione estesa 2'
     ]
 
-    xlsx_cols = [
+    x_cols = [
         'Marchio',
         'Articolo n°',
         'CPU',
@@ -130,33 +130,33 @@ def update():
     ]
 
     # XLSX Cleanup 1, list_xlsx.Marchio.unique() for the list
-    mask = (list_xlsx[xlsx_cols[0]] == 'Not Applicable') & (list_xlsx[xlsx_cols[3]].str.contains('D\'Addario '))
-    list_xlsx.loc[mask, xlsx_cols[3]] = list_xlsx.loc[mask, xlsx_cols[3]].str.replace('D\'Addario ', '', regex=True)
-    list_xlsx.loc[mask, xlsx_cols[0]] = 'D\'Addario'
+    mask = (list_xlsx[x_cols[0]] == 'Not Applicable') & (list_xlsx[x_cols[3]].str.contains('D\'Addario '))
+    list_xlsx.loc[mask, x_cols[3]] = list_xlsx.loc[mask, x_cols[3]].str.replace('D\'Addario ', '', regex=True)
+    list_xlsx.loc[mask, x_cols[0]] = 'D\'Addario'
 
     # XLSX Cleanup 2, euro symbols
-    list_xlsx[xlsx_cols[4]] = strip_currency(list_xlsx[xlsx_cols[4]])
-    list_xlsx[xlsx_cols[5]] = strip_currency(list_xlsx[xlsx_cols[5]])
+    list_xlsx[x_cols[4]] = strip_currency(list_xlsx[x_cols[4]])
+    list_xlsx[x_cols[5]] = strip_currency(list_xlsx[x_cols[5]])
 
     # CSV construction
     list_csv = pd.DataFrame()
-    list_csv[csv_cols[0]] = list_xlsx[xlsx_cols[1]]
+    list_csv[c_cols[0]] = list_xlsx[x_cols[1]]
 
-    list_csv[csv_cols[1]] = list_xlsx[[xlsx_cols[0], xlsx_cols[1], xlsx_cols[3]]].astype(str).agg(' '.join, axis=1)
+    list_csv[c_cols[1]] = list_xlsx[[x_cols[0], x_cols[1], x_cols[3]]].astype(str).agg(' '.join, axis=1)
 
-    list_csv[[csv_cols[2], csv_cols[3], csv_cols[4]]] = ''
+    list_csv[[c_cols[2], c_cols[3], c_cols[4]]] = ''
 
-    list_csv[csv_cols[5]] = list_xlsx[xlsx_cols[0]]
+    list_csv[c_cols[5]] = list_xlsx[x_cols[0]]
 
-    list_csv[csv_cols[6]] = list_xlsx[xlsx_cols[1]]
+    list_csv[c_cols[6]] = list_xlsx[x_cols[1]]
 
-    list_csv[csv_cols[7]] = (list_xlsx[xlsx_cols[4]].astype(float)*(1-int(iva)/100)).round(2)
+    list_csv[c_cols[7]] = (list_xlsx[x_cols[4]].astype(float)*(1-int(iva)/100)).round(2)
 
-    list_csv[csv_cols[8]] = list_xlsx[xlsx_cols[5]]
+    list_csv[c_cols[8]] = list_xlsx[x_cols[5]]
 
-    list_csv[csv_cols[9]] = ''
+    list_csv[c_cols[9]] = ''
 
-    list_csv[csv_cols[10]] = ''  # TODO: clarify content
+    list_csv[c_cols[10]] = list_xlsx[x_cols[10]].map(lambda d: 0 if d != 0 else 2, 'ignore')
 
     # TODO: (probably) remove <Marchio> instances from <Nome Prodotto>
 
