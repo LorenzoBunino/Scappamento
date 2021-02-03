@@ -5,6 +5,7 @@
 # Save as CSV
 
 import os.path
+from datetime import date
 
 from requests import Session
 from bs4 import BeautifulSoup
@@ -79,22 +80,22 @@ def update():
         'Sottocategoria 1',
         'Sottocategoria 2',
         'Nome Produttore',
-        'Codice articolo produttore',
-        'Prezzo di listino ufficiale',
-        'Prezzo di acquisto da fornitore',
+        'Codice Articolo Produttore',
+        'Prezzo di Listino Ufficiale',
+        'Prezzo di Acquisto da Fornitore',
         'Sconto',
         'Quantità',
         'Peso (kg)',
         'Volume (m3)',
-        'Codice a barre',
+        'Codice a Barre',
         'Foto',
-        'Tabella personalizzata 2',
-        'Tabella personalizzata 3',
-        'Campo libero 1',
-        'Campo libero 2',
-        'Campo libero 3',
-        'Descrizione estesa',
-        'Descrizione estesa 2'
+        'Tabella Personalizzata 2',
+        'Tabella Personalizzata 3',
+        'Campo Libero 1',
+        'Previsione Arrivo',  # was 'Campo Libero 2'
+        'Campo Libero 3',
+        'Descrizione Estesa',
+        'Descrizione Estesa 2'
     ]
 
     x_cols = [
@@ -133,10 +134,19 @@ def update():
         'Immagini prodotto'
     ]
 
+    # Column backup before cleanup, to be used later
+    backup_col = 'Nome Prodotto Orig'
+    list_xlsx[backup_col] = list_xlsx[x_cols[3]]
+
     # XLSX Cleanup 1, list_xlsx.Marchio.unique() for the list
     mask = (list_xlsx[x_cols[0]] == 'Not Applicable') & (list_xlsx[x_cols[3]].str.contains('D\'Addario '))
     list_xlsx.loc[mask, x_cols[3]] = list_xlsx.loc[mask, x_cols[3]].str.replace('D\'Addario ', '', regex=True)
     list_xlsx.loc[mask, x_cols[0]] = 'D\'Addario'
+
+    # TODO: cleanup, where {'Not Applicable': 'D\'Addario Accessories'}, same as cleanup 1
+    # TODO: same as above for all 'Not Applicable' instances
+
+    # TODO: remove 'Marchio' and 'Articolo n°' instances from 'Nome Prodotto'
 
     # XLSX Cleanup 2, euro symbols
     list_xlsx[x_cols[4]] = strip_currency(list_xlsx[x_cols[4]])
@@ -152,7 +162,7 @@ def update():
 
     list_csv[c_cols[1]] = list_xlsx[[x_cols[0], x_cols[1], x_cols[3]]].astype(str).agg(' '.join, axis=1)
 
-    list_csv[[c_cols[2], c_cols[3], c_cols[4]]] = ''
+    list_csv[[c_cols[2], c_cols[3], c_cols[4]]] = ''  # TODO: = Marchio
 
     list_csv[c_cols[5]] = list_xlsx[x_cols[0]]
 
@@ -171,7 +181,17 @@ def update():
     conv_coefficient = pow(2.54 / 100, 3)  # in to m, then m^3
     list_csv[c_cols[12]] = list_xlsx[x_cols[14]] * list_xlsx[x_cols[15]] * list_xlsx[x_cols[16]] * conv_coefficient
 
-    # TODO: (probably) remove <Marchio> instances from <Nome Prodotto>
+    list_csv[c_cols[13]] = list_xlsx[x_cols[2]]
+
+    list_csv[c_cols[14]] = list_xlsx[x_cols[32]]
+
+    list_csv[c_cols[15]] = ''
+
+    list_csv[c_cols[16]] = ''
+
+    list_csv[c_cols[17]] = ''  # TODO: original nome prodotto
+
+    list_csv[c_cols[18]] = ''  # TODO: previsione, dd/mm/yyyy
 
     print('Saving...')
     list_xlsx.to_csv(os.path.join(target_path, csv_filename), sep=';', header=None, index=False)
