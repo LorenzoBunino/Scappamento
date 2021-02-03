@@ -16,11 +16,15 @@ from .supplier import Supplier  # , ScappamentoError
 supplier_name = 'D\'Addario'
 
 
-def strip_currency(series):
+def strip_currency(series: pd.Series):
     temp = series.str.replace(' €', '')
     temp = temp.str.replace(',', '.')
     # use unidecode if something like the issue below reappears
     return temp.str.replace(u'\xa0', '')
+
+
+def switch_decimal_sep(series: pd.Series):
+    return series.str.replace(',', '.')
 
 
 def update():
@@ -138,6 +142,10 @@ def update():
     list_xlsx[x_cols[4]] = strip_currency(list_xlsx[x_cols[4]])
     list_xlsx[x_cols[5]] = strip_currency(list_xlsx[x_cols[5]])
 
+    # XLSX Cleanup 3, measurements
+    for column in x_cols[14:17]:
+        list_xlsx[column] = switch_decimal_sep(list_xlsx[column]).astype(float)
+
     # CSV construction
     list_csv = pd.DataFrame()
     list_csv[c_cols[0]] = list_xlsx[x_cols[1]]
@@ -157,6 +165,11 @@ def update():
     list_csv[c_cols[9]] = ''
 
     list_csv[c_cols[10]] = list_xlsx[x_cols[10]].map(lambda d: 0 if d != 0 else 2, 'ignore')
+
+    list_csv[c_cols[11]] = list_xlsx[x_cols[17]]
+
+    conv_coefficient = pow(2.54 / 100, 3)  # in to m, then m^3
+    list_csv[c_cols[12]] = list_xlsx[x_cols[14]] * list_xlsx[x_cols[15]] * list_xlsx[x_cols[16]] * conv_coefficient
 
     # TODO: (probably) remove <Marchio> instances from <Nome Prodotto>
 
