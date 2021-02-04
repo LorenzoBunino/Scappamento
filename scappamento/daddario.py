@@ -18,11 +18,7 @@ supplier_name = 'D\'Addario'
 
 
 def strip_currency(series: pd.Series):
-    # TODO: refactor this to use .loc, mutability > returning temp copy
-    temp = series.str.replace(' €', '')
-    temp = temp.str.replace(',', '.')
-    # use unidecode if something like the issue below reappears
-    return temp.str.replace(u'\xa0', '')
+    return series.str.replace(' €', '').str.replace(',', '.').str.replace(u'\xa0', '')
 
 
 def switch_decimal_sep(series: pd.Series):
@@ -48,7 +44,8 @@ def update():
         'dl_form_action_url',
         'IVA',
         'target_path',
-        'csv_filename'
+        'csv_filename',
+        'untidy_brands'
     ]
     daddario = Supplier(supplier_name, key_list)
 
@@ -63,7 +60,8 @@ def update():
      dl_form_action_url,
      iva,  # percentage value
      target_path,
-     csv_filename] = daddario.val_list
+     csv_filename,
+     untidy_brands] = daddario.val_list
 
     with Session() as s:
         # Login
@@ -79,7 +77,7 @@ def update():
         r = s.post(dl_form_action_url, data=payload)  # TODO: might need a check for error responses, picky cloudflare
 
     print('Reading data...')
-    list_xlsx = pd.read_excel(r.content, engine='openpyxl')
+    xlsx_df = pd.read_excel(r.content, engine='openpyxl')
 
     c_cols = [
         'Codice Articolo',
@@ -144,73 +142,73 @@ def update():
 
     # Column backup before cleanup, to be used later
     backup_col = 'Nome Prodotto Orig'
-    list_xlsx[backup_col] = list_xlsx[x_cols[3]]
+    xlsx_df[backup_col] = xlsx_df[x_cols[3]]
 
-    # XLSX Cleanup 1, 2, list_xlsx.Marchio.unique() for the list
-    # TODO: maybe return masks to speed up cleanup 4
-    clean_notapplicable(list_xlsx, 'D\'Addario Accessories')
-    clean_notapplicable(list_xlsx, 'D\'Addario')
+    print('Processing data...')
+    # XLSX Cleanup 1, 'Not Applicable'
+    for brand in untidy_brands.split(', '):  # xlsx_df.Marchio.unique() for the list
+        clean_notapplicable(xlsx_df, brand)  # TODO: maybe return masks to speed up cleanup 69
+    xlsx_df[x_cols[0]].replace('Not Applicable', 'D\'Addario', inplace=True)
 
-    # TODO: cleanup, where {'Not Applicable': brand}, for all 'Not Applicable' instances -- cleanup 3
-
-    # TODO: remove 'Marchio' and 'Articolo n°' instances from 'Nome Prodotto' -- cleanup 4
+    # TODO: remove 'Marchio' and 'Articolo n°' instances from 'Nome Prodotto' -- cleanup 69
 
     # XLSX Cleanup 2, euro symbols
-    list_xlsx[x_cols[4]] = strip_currency(list_xlsx[x_cols[4]])
-    list_xlsx[x_cols[5]] = strip_currency(list_xlsx[x_cols[5]])
+    xlsx_df[x_cols[4]] = strip_currency(xlsx_df[x_cols[4]])
+    xlsx_df[x_cols[5]] = strip_currency(xlsx_df[x_cols[5]])
 
     # XLSX Cleanup 3, measurements
     for column in x_cols[14:17]:
-        list_xlsx[column] = switch_decimal_sep(list_xlsx[column]).astype(float)
+        xlsx_df[column] = switch_decimal_sep(xlsx_df[column]).astype(float)
 
     # CSV construction
-    list_csv = pd.DataFrame()
-    list_csv[c_cols[0]] = list_xlsx[x_cols[1]]
+    csv_df = pd.DataFrame()
+    csv_df[c_cols[0]] = xlsx_df[x_cols[1]]
 
-    list_csv[c_cols[1]] = list_xlsx[[x_cols[0], x_cols[1], x_cols[3]]].astype(str).agg(' '.join, axis=1)
+    csv_df[c_cols[1]] = xlsx_df[[x_cols[0], x_cols[1], x_cols[3]]].astype(str).agg(' '.join, axis=1)
 
-    list_csv[c_cols[2]] = list_xlsx[x_cols[0]]  # imperfect, but it's a start
+    csv_df[c_cols[2]] = xlsx_df[x_cols[0]]  # imperfect, but it's a start
 
-    list_csv[[c_cols[3], c_cols[4]]] = ''
+    csv_df[[c_cols[3], c_cols[4]]] = ''
 
-    list_csv[c_cols[5]] = list_xlsx[x_cols[0]]
+    csv_df[c_cols[5]] = xlsx_df[x_cols[0]]
 
-    list_csv[c_cols[6]] = list_xlsx[x_cols[1]]
+    csv_df[c_cols[6]] = xlsx_df[x_cols[1]]
 
-    list_csv[c_cols[7]] = (list_xlsx[x_cols[4]].astype(float)*(1-int(iva)/100)).round(2)
+    csv_df[c_cols[7]] = (xlsx_df[x_cols[4]].astype(float)*(1-int(iva)/100)).round(2)
 
-    list_csv[c_cols[8]] = list_xlsx[x_cols[5]]
+    csv_df[c_cols[8]] = xlsx_df[x_cols[5]]
 
-    list_csv[c_cols[9]] = ''
+    csv_df[c_cols[9]] = ''
 
-    list_csv[c_cols[10]] = list_xlsx[x_cols[10]].map(lambda d: 0 if d != 0 else 2, 'ignore')
+    csv_df[c_cols[10]] = xlsx_df[x_cols[10]].map(lambda d: 0 if d != 0 else 2, 'ignore')
 
-    list_csv[c_cols[11]] = list_xlsx[x_cols[17]]
+    csv_df[c_cols[11]] = xlsx_df[x_cols[17]]
 
     conv_coefficient = pow(2.54 / 100, 3)  # in to m, then m^3
-    list_csv[c_cols[12]] = list_xlsx[x_cols[14]] * list_xlsx[x_cols[15]] * list_xlsx[x_cols[16]] * conv_coefficient
+    csv_df[c_cols[12]] = xlsx_df[x_cols[14]] * xlsx_df[x_cols[15]] * xlsx_df[x_cols[16]] * conv_coefficient
 
-    list_csv[c_cols[13]] = list_xlsx[x_cols[2]]
+    csv_df[c_cols[13]] = xlsx_df[x_cols[2]]
 
-    list_csv[c_cols[14]] = list_xlsx[x_cols[32]]
+    csv_df[c_cols[14]] = xlsx_df[x_cols[32]]
 
-    list_csv[c_cols[15]] = ''
+    csv_df[c_cols[15]] = ''
 
-    list_csv[c_cols[16]] = ''
+    csv_df[c_cols[16]] = ''
 
-    list_csv[c_cols[17]] = list_xlsx[backup_col]
+    csv_df[c_cols[17]] = xlsx_df[backup_col]
 
     today = date.today()
-    list_csv[c_cols[18]] = list_xlsx[x_cols[10]].map(lambda arr: (today + timedelta(days=arr)).strftime('%d/%m/%Y'))
+    csv_df[c_cols[18]] = xlsx_df[x_cols[10]]\
+        .map(lambda arrival: '' if arrival == 0 else (today + timedelta(days=arrival)).strftime('%d/%m/%Y'))
 
-    list_csv[c_cols[19]] = ''
+    csv_df[c_cols[19]] = ''  # TODO: content = 'Marca, CodArt, Marca CodArt, Nome, EAN'
 
-    list_csv[c_cols[20]] = list_xlsx[x_cols[3]]
+    csv_df[c_cols[20]] = xlsx_df[x_cols[3]]
 
-    list_csv[c_cols[21]] = list_xlsx[x_cols[26:32]].astype(str).agg('\n'.join, axis=1)
+    csv_df[c_cols[21]] = xlsx_df[x_cols[26:32]].fillna('').astype(str).agg('\n'.join, axis=1).str.strip()
 
     print('Saving...')
-    list_csv.to_csv(os.path.join(target_path, csv_filename), sep=';', index=False)
+    csv_df.to_csv(os.path.join(target_path, csv_filename), sep=';', index=False)
 
 
 if __name__ == '__main__':
