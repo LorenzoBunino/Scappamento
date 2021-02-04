@@ -5,7 +5,7 @@
 # Save as CSV
 
 import os.path
-from datetime import date
+from datetime import date, timedelta
 
 from requests import Session
 from bs4 import BeautifulSoup
@@ -18,6 +18,7 @@ supplier_name = 'D\'Addario'
 
 
 def strip_currency(series: pd.Series):
+    # TODO: refactor this to use .loc, mutability > returning temp copy
     temp = series.str.replace(' €', '')
     temp = temp.str.replace(',', '.')
     # use unidecode if something like the issue below reappears
@@ -26,6 +27,13 @@ def strip_currency(series: pd.Series):
 
 def switch_decimal_sep(series: pd.Series):
     return series.str.replace(',', '.')
+
+
+def clean_notapplicable(df: pd.DataFrame, brand: str):
+    # TODO: temporary hardcoded impl, needs 2 b refactored into a method
+    mask = (df['Marchio'] == 'Not Applicable') & (df['Nome prodotto'].str.contains(brand))
+    df.loc[mask, 'Nome prodotto'] = df.loc[mask, 'Nome prodotto'].str.replace(' ?' + brand, '', regex=True)
+    df.loc[mask, 'Marchio'] = brand.strip()
 
 
 def update():
@@ -138,15 +146,14 @@ def update():
     backup_col = 'Nome Prodotto Orig'
     list_xlsx[backup_col] = list_xlsx[x_cols[3]]
 
-    # XLSX Cleanup 1, list_xlsx.Marchio.unique() for the list
-    mask = (list_xlsx[x_cols[0]] == 'Not Applicable') & (list_xlsx[x_cols[3]].str.contains('D\'Addario '))
-    list_xlsx.loc[mask, x_cols[3]] = list_xlsx.loc[mask, x_cols[3]].str.replace('D\'Addario ', '', regex=True)
-    list_xlsx.loc[mask, x_cols[0]] = 'D\'Addario'
+    # XLSX Cleanup 1, 2, list_xlsx.Marchio.unique() for the list
+    # TODO: maybe return masks to speed up cleanup 4
+    clean_notapplicable(list_xlsx, 'D\'Addario Accessories')
+    clean_notapplicable(list_xlsx, 'D\'Addario')
 
-    # TODO: cleanup, where {'Not Applicable': 'D\'Addario Accessories'}, same as cleanup 1
-    # TODO: same as above for all 'Not Applicable' instances
+    # TODO: cleanup, where {'Not Applicable': brand}, for all 'Not Applicable' instances -- cleanup 3
 
-    # TODO: remove 'Marchio' and 'Articolo n°' instances from 'Nome Prodotto'
+    # TODO: remove 'Marchio' and 'Articolo n°' instances from 'Nome Prodotto' -- cleanup 4
 
     # XLSX Cleanup 2, euro symbols
     list_xlsx[x_cols[4]] = strip_currency(list_xlsx[x_cols[4]])
@@ -162,7 +169,9 @@ def update():
 
     list_csv[c_cols[1]] = list_xlsx[[x_cols[0], x_cols[1], x_cols[3]]].astype(str).agg(' '.join, axis=1)
 
-    list_csv[[c_cols[2], c_cols[3], c_cols[4]]] = ''  # TODO: = Marchio
+    list_csv[c_cols[2]] = list_xlsx[x_cols[0]]  # imperfect, but it's a start
+
+    list_csv[[c_cols[3], c_cols[4]]] = ''
 
     list_csv[c_cols[5]] = list_xlsx[x_cols[0]]
 
@@ -189,12 +198,19 @@ def update():
 
     list_csv[c_cols[16]] = ''
 
-    list_csv[c_cols[17]] = ''  # TODO: original nome prodotto
+    list_csv[c_cols[17]] = list_xlsx[backup_col]
 
-    list_csv[c_cols[18]] = ''  # TODO: previsione, dd/mm/yyyy
+    today = date.today()
+    list_csv[c_cols[18]] = list_xlsx[x_cols[10]].map(lambda arr: (today + timedelta(days=arr)).strftime('%d/%m/%Y'))
+
+    list_csv[c_cols[19]] = ''
+
+    list_csv[c_cols[20]] = list_xlsx[x_cols[3]]
+
+    list_csv[c_cols[21]] = list_xlsx[x_cols[26:32]].astype(str).agg('\n'.join, axis=1)
 
     print('Saving...')
-    list_xlsx.to_csv(os.path.join(target_path, csv_filename), sep=';', header=None, index=False)
+    list_csv.to_csv(os.path.join(target_path, csv_filename), sep=';', index=False)
 
 
 if __name__ == '__main__':
