@@ -1,7 +1,6 @@
 # --- D'Addario ---
-# Download product list
-# Perform file conversion
-# Maybe cleanup
+# Download product catalogue
+# Process and clean data
 # Save as CSV
 
 import os.path
@@ -17,19 +16,29 @@ from .supplier import Supplier  # , ScappamentoError
 supplier_name = 'D\'Addario'
 
 
+# Remove euro symbol and leading space, fix random unicode character
 def strip_currency(series: pd.Series):
-    return series.str.replace(' €', '').str.replace(',', '.').str.replace(u'\xa0', '')
+    # use unidecode if more stuff like \xa0 happens
+    return series.str.replace(' ?€', '', regex=True).str.replace(u'\xa0', '')
 
 
+# Replace comma decimal separator with dot
 def switch_decimal_sep(series: pd.Series):
     return series.str.replace(',', '.')
 
 
-def clean_notapplicable(df: pd.DataFrame, brand: str):
-    # TODO: temporary hardcoded impl, needs 2 b refactored into a method
-    mask = (df['Marchio'] == 'Not Applicable') & (df['Nome prodotto'].str.contains(brand))
-    df.loc[mask, 'Nome prodotto'] = df.loc[mask, 'Nome prodotto'].str.replace(' ?' + brand, '', regex=True)
-    df.loc[mask, 'Marchio'] = brand.strip()
+# Replace 'Not Applicable' brand instances with correct brand taken from product name
+def clean_notapplicable(df: pd.DataFrame, brand: str, brand_col: str, art_col: str):
+    # TODO: temporary hardcoded implementation, needs to be refactored into a method
+    mask = (df[brand_col] == 'Not Applicable') & (df[art_col].str.contains(brand))
+    df.loc[mask, art_col] = df.loc[mask, art_col].str.replace(' ?' + brand, '', regex=True)
+    df.loc[mask, brand_col] = brand.strip()
+
+
+# Remove redundant data from product name column
+def clean_brand_in_name(df: pd.DataFrame, brand_col: str, name_col: str):
+    mask = df.apply(lambda d: d[brand_col] in d[name_col], axis=1)
+    df.loc[mask, name_col] = df.loc[mask].apply(lambda d: d[name_col].replace(d[brand_col], '').strip(), axis=1)
 
 
 def update():
@@ -42,7 +51,7 @@ def update():
         'return_url',
         'token_input_css',
         'dl_form_action_url',
-        'IVA',
+        'iva',
         'target_path',
         'csv_filename',
         'untidy_brands'
@@ -140,23 +149,26 @@ def update():
         'Immagini prodotto'
     ]
 
-    # Column backup before cleanup, to be used later
+    xlsx_df[x_cols[3]].fillna('', inplace=True)
+
+    # Column backup before additional cleanup, to be used later
     backup_col = 'Nome Prodotto Orig'
     xlsx_df[backup_col] = xlsx_df[x_cols[3]]
 
     print('Processing data...')
-    # XLSX Cleanup 1, 'Not Applicable'
+    # XLSX Cleanup - 'Not Applicable'
     for brand in untidy_brands.split(', '):  # xlsx_df.Marchio.unique() for the list
-        clean_notapplicable(xlsx_df, brand)  # TODO: maybe return masks to speed up cleanup 69
+        clean_notapplicable(xlsx_df, brand, x_cols[0], x_cols[3])
     xlsx_df[x_cols[0]].replace('Not Applicable', 'D\'Addario', inplace=True)
 
-    # TODO: remove 'Marchio' and 'Articolo n°' instances from 'Nome Prodotto' -- cleanup 69
+    # XLSX Cleanup - remove 'Marchio' and 'Articolo n°' instances from 'Nome Prodotto'
+    clean_brand_in_name(xlsx_df, x_cols[0], x_cols[3])  # TODO: INCOMPLETE, repeat for article_no
 
-    # XLSX Cleanup 2, euro symbols
-    xlsx_df[x_cols[4]] = strip_currency(xlsx_df[x_cols[4]])
-    xlsx_df[x_cols[5]] = strip_currency(xlsx_df[x_cols[5]])
+    # XLSX Cleanup - currency
+    for price_col in x_cols[4:6]:
+        xlsx_df[price_col] = switch_decimal_sep(strip_currency(xlsx_df[price_col]))
 
-    # XLSX Cleanup 3, measurements
+    # XLSX Cleanup - measurements
     for column in x_cols[14:17]:
         xlsx_df[column] = switch_decimal_sep(xlsx_df[column]).astype(float)
 
